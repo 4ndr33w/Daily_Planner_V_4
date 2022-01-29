@@ -365,7 +365,8 @@
                                     Background="Transparent" 
                                     Foreground="White" 
                                     BorderBrush="Gray"     
-                                    BorderThickness="2"/>
+                                    BorderThickness="2"
+                                    Click="Btn_Create_New_Note_Click"/>
                             </StackPanel>
                             <StackPanel>
                                 <Expander Header="{x:Static language:Lang.Notes_Expander_Header}" Foreground="White" IsExpanded="True">

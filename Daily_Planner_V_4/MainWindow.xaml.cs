@@ -82,6 +82,15 @@ namespace Daily_Planner_V_4
             value = value.Substring(1);
             return value;
         }
+        public int Localization_Compare_Method(string programFieldString, string localizationFieldString)
+        {
+            CompareInfo exec_compareInfo_en = new CultureInfo("en-GB", false).CompareInfo;
+            CompareInfo exec_compareInfo_ru = new CultureInfo("en-GB", false).CompareInfo;
+            SortKey sort_key_en = exec_compareInfo_en.GetSortKey(programFieldString);
+            SortKey sort_key_ru = exec_compareInfo_ru.GetSortKey(localizationFieldString);
+            //MessageBox.Show(SortKey.Compare(sort_key_en, sort_key_ru).ToString();
+            return SortKey.Compare(sort_key_en, sort_key_ru);
+        }
         public ObservableCollection<Group_of_Notes> Union_Grps_Method(ObservableCollection<Group_Panel_Data> my_grps, ObservableCollection<Group_Panel_Data> deleg_grps)
         {
             ObservableCollection<Group_of_Notes> temp_grps_coll = new ObservableCollection<Group_of_Notes>();
@@ -169,6 +178,13 @@ namespace Daily_Planner_V_4
                 fStream.Close();
             }
             return temp_data;
+        }
+
+        private void Btn_Create_New_Note_Click(object sender, RoutedEventArgs e)
+        {
+            Add_Note_Window add_note_Wndw = new Add_Note_Window();
+            add_note_Wndw.Owner = this;
+            add_note_Wndw.Show();
         }
     }
 }
