@@ -1,0 +1,85 @@
+﻿<Window x:Class="Daily_Planner_V_4.Add_Grp_Window"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Daily_Planner_V_4"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
+        xmlns:language ="clr-namespace:Daily_Planner_V_4.Properties.Languages"
+        Title="" MinHeight="250" MinWidth="350" MaxHeight="300" MaxWidth="400">
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF1D1D1D"/>
+                <GradientStop Color="#FF424242" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <DockPanel LastChildFill="False">
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <Button x:Name="new_taskGroup_Close_Window" Background="Transparent" BorderBrush="Gray" BorderThickness="2" Content="{x:Static language:Lang.Cancel_Btn}" Padding="5,2,5,2" Foreground="White" Margin="10,5,0,5" Click="new_taskGroup_Close_Window_Click"/>
+                <Button x:Name="new_taskGroup_OK_Button" Background="Transparent" BorderBrush="Gray" BorderThickness="2" Content="{x:Static language:Lang.OK_Btn}" Padding="10,2,10,1" Foreground="White" Margin="15,5,0,5" Click="new_taskGroup_OK_Button_Click"/>
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Left" Orientation="Vertical" VerticalAlignment="Top" Width="65">
+                <TextBox 
+                    Background="Transparent" 
+                    Foreground="White" 
+                    TextWrapping="WrapWithOverflow" 
+                    IsEnabled="False" 
+                    BorderBrush="Transparent" 
+                    FontSize="8.5" 
+                    Text="{x:Static language:Lang.Add_Grp_Wndw__Choose_Color}" 
+                    HorizontalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="Color_Dark_Red_Button" BorderThickness="1" BorderBrush="Black" Background="DarkRed" Width="10" Height="10" Margin="5,5,5,5" Click="Color_Dark_Red_Button_Click"/>
+                    <Button x:Name="Color_Red_Button" BorderThickness="1" BorderBrush="Black" Background="#FFDE0404" Width="10" Height="10" Margin="0,5,5,5" Click="Color_Red_Button_Click"/>
+                    <Button x:Name="Color_Medium_Red_Button" BorderThickness="1" BorderBrush="Black" Background="#FFF75F7B" Width="10" Height="10" Margin="0,5,5,5" Click="Color_Medium_Red_Button_Click"/>
+                    <Button x:Name="Color_Lighr_Red_Button" BorderThickness="1" BorderBrush="Black" Background="#FFD288A1" Width="10" Height="10" Margin="0,5,5,5" Click="Color_Lighr_Red_Button_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="Color_Dark_Orange_Button" BorderThickness="1" BorderBrush="Black" Background="OrangeRed" Width="10" Height="10" Margin="5,0,5,5" Click="Color_Dark_Orange_Button_Click"/>
+                    <Button x:Name="Color_Orange_Button" BorderThickness="1" BorderBrush="Black" Background="DarkOrange" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Orange_Button_Click"/>
+                    <Button x:Name="Color_Medium_Orange_Button" BorderThickness="1" BorderBrush="Black" Background="#FFFFA707" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Medium_Orange_Button_Click"/>
+                    <Button x:Name="Color_Light_Orange_Button" BorderThickness="1" BorderBrush="Black" Background="#FFFFBF4C" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Light_Orange_Button_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="Color_Dark_Yellow_Button" BorderThickness="1" BorderBrush="Black" Background="#FFA4A404" Width="10" Height="10" Margin="5,0,5,5" Click="Color_Dark_Yellow_Button_Click"/>
+                    <Button x:Name="Color_Yellow_Button" BorderThickness="1" BorderBrush="Black" Background="#FFE2E200" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Yellow_Button_Click"/>
+                    <Button x:Name="Color_Medium_Yellow_Button" BorderThickness="1" BorderBrush="Black" Background="#FFFFFF9A" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Medium_Yellow_Button_Click"/>
+                    <Button x:Name="Color_Light_Yellow_Button" BorderThickness="1" BorderBrush="Black" Background="White" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Light_Yellow_Button_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="Color_Dark_Green_Button" BorderThickness="1" BorderBrush="Black" Background="DarkGreen" Width="10" Height="10" Margin="5,0,5,5" Click="Color_Dark_Green_Button_Click"/>
+                    <Button x:Name="Color_Green_Button" BorderThickness="1" BorderBrush="Black" Background="#FF059C05" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Green_Button_Click"/>
+                    <Button x:Name="Color_Medium_Green_Button" BorderThickness="1" BorderBrush="Black" Background="LawnGreen" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Medium_Green_Button_Click"/>
+                    <Button x:Name="Color_Light_Green_Button" BorderThickness="1" BorderBrush="Black" Background="#FF9EEF9E" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Light_Green_Button_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="Color_Dark_Blue_Button" BorderThickness="1" BorderBrush="Black" Background="DarkBlue" Width="10" Height="10" Margin="5,0,5,5" Click="Color_Dark_Blue_Button_Click"/>
+                    <Button x:Name="Color_Blue_Button" BorderThickness="1" BorderBrush="Black" Background="Blue" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Blue_Button_Click"/>
+                    <Button x:Name="Color_Medium_Blue_Button" BorderThickness="1" BorderBrush="Black" Background="#FF2872F7" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Medium_Blue_Button_Click"/>
+                    <Button x:Name="Color_Light_Blue_Button" BorderThickness="1" BorderBrush="Black" Background="DeepSkyBlue" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Light_Blue_Button_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="Color_Dark_Violet_Button" BorderThickness="1" BorderBrush="Black" Background="DarkViolet" Width="10" Height="10" Margin="5,0,5,5" Click="Color_Dark_Violet_Button_Click"/>
+                    <Button x:Name="Color_Violet_Button" BorderThickness="1" BorderBrush="Black" Background="BlueViolet" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Violet_Button_Click"/>
+                    <Button x:Name="Color_Medium_Violet_Button" BorderThickness="1" BorderBrush="Black" Background="MediumVioletRed" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Medium_Violet_Button_Click"/>
+                    <Button x:Name="Color_Light_Violet_Button" BorderThickness="1" BorderBrush="Black" Background="PaleVioletRed" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Light_Violet_Button_Click"/>
+                </StackPanel>
+
+            </StackPanel>
+            <StackPanel>
+                <Label Foreground="White" Content="{x:Static language:Lang.Add_Grp_Wndw__Enter_Grp_Name}" Margin="45,0,0,0"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="Chosen_Color_Indicator" Height="15" Width="15" Margin="25,0,0,0" Background="Transparent"/>
+                    <TextBox x:Name="Note_Group_Name_TextBox" 
+                             Background="Transparent" 
+                             BorderBrush="Gray" 
+                             BorderThickness="2" 
+                             Foreground="White" 
+                             Margin="10,0,0,0" HorizontalAlignment="Stretch" Width="130" CaretBrush="White"/>
+                </StackPanel>
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</Window>
