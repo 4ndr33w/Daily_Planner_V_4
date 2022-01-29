@@ -17,6 +17,9 @@ using System.Globalization;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Xml.Serialization;
+using System.Resources;
+using System.Windows.Forms;
+
 
 namespace Daily_Planner_V_4
 {
@@ -33,9 +36,10 @@ namespace Daily_Planner_V_4
         public ObservableCollection<Note_Template> note_template = new ObservableCollection<Note_Template>();
         public ObservableCollection<Note_Template> expired_note_template = new ObservableCollection<Note_Template>();
         public ObservableCollection<Note_Template> completed_note_template = new ObservableCollection<Note_Template>();
+        string langCode = "en-GB";
         public MainWindow()
         {
-            var langCode = Properties.Settings.Default.languageCode;
+            langCode = Properties.Settings.Default.languageCode;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(langCode);
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(langCode);
             InitializeComponent();
@@ -59,36 +63,52 @@ namespace Daily_Planner_V_4
             {
                 foreach (var grp in temp_data)
                 {
-                    if (grp.Execution_of == Localization_return_source_value_Method(Properties.Languages.Lang.Executor_string_Me))
+                    //if (/*Localization_Compare_Method*/(Localization_return_source_value_Method(grp.Execution_of) == Localization_return_source_value_Method(Properties.Languages.Lang.Executor_string_Me))/* == 0*/)
+                    if (grp.Execution_of == "Я" || grp.Execution_of == "Me")
+                    //if (grp.Execution_of == "Me" || grp.Execution_of == "Я")
                     {
-                        //my_Grps_Panel.Add(new Group_of_Notes(grp));
                         my_Grps_Panel.Add(new Group_Panel_Data(grp));
                     }
-                    if (grp.Execution_of == Localization_return_source_value_Method(Properties.Languages.Lang.Executor_string_Delegated))
+                    if (grp.Execution_of == "Delegated" || grp.Execution_of == "Поручено")
                     {
-                        //delegated_Grps_list.Add(new Group_of_Notes(grp));
                         delegated_Grps_Panel.Add(new Group_Panel_Data(grp));
                     }
+                    
+                    //if (grp.Execution_of == Localization_return_source_value_Method(Properties.Languages.Lang.Executor_string_Me))
+                    //{
+                    //    //my_Grps_Panel.Add(new Group_of_Notes(grp));
+                    //    my_Grps_Panel.Add(new Group_Panel_Data(grp));
+                    //}
+                    //if (grp.Execution_of == Localization_return_source_value_Method(Properties.Languages.Lang.Executor_string_Delegated))
+                    //{
+                    //    //delegated_Grps_list.Add(new Group_of_Notes(grp));
+                    //    delegated_Grps_Panel.Add(new Group_Panel_Data(grp));
+                    //}
                 }
+                //Localization_Compare_Method(temp_data[0].Execution_of, Properties.Languages.Lang.Executor_string_Me);
+                //MessageBox.Show(Localization_Compare_Method(Localization_return_source_value_Method(temp_data[0].Execution_of), Localization_return_source_value_Method(Properties.Languages.Lang.Executor_string_Me)).ToString()); // Localization_Compare_Method(Localization_return_source_value_Method(temp_data[0].Execution_of)), Localization_return_source_value_Method(Properties.Languages.Lang.Executor_string_Me)).ToString());
+
+                //MessageBox.Show(Localization_return_source_value_Method(Properties.Languages.Lang.Executor_string_Me));
             }
 
         }
         public string Localization_return_source_value_Method(string localization_string)
         {
-            CompareInfo exec_compareInfo_en = new CultureInfo("en-GB", false).CompareInfo;
+            CompareInfo exec_compareInfo_en = new CultureInfo(langCode, false).CompareInfo;
             SortKey sort_key_en = exec_compareInfo_en.GetSortKey(localization_string);
             string[] trimmed_string = sort_key_en.ToString().Split(',');
             string value = trimmed_string[2];
             value = value.Substring(1);
-            return value;
+            return localization_string; // value;
         }
         public int Localization_Compare_Method(string programFieldString, string localizationFieldString)
         {
-            CompareInfo exec_compareInfo_en = new CultureInfo("en-GB", false).CompareInfo;
-            CompareInfo exec_compareInfo_ru = new CultureInfo("en-GB", false).CompareInfo;
-            SortKey sort_key_en = exec_compareInfo_en.GetSortKey(programFieldString);
-            SortKey sort_key_ru = exec_compareInfo_ru.GetSortKey(localizationFieldString);
-            //MessageBox.Show(SortKey.Compare(sort_key_en, sort_key_ru).ToString();
+            CompareInfo exec_compareInfo_en = new CultureInfo(langCode, false).CompareInfo;
+            CompareInfo exec_compareInfo_ru = new CultureInfo(langCode, false).CompareInfo;
+            //exec_compareInfo_en.
+            SortKey sort_key_en = exec_compareInfo_en.GetSortKey(Localization_return_source_value_Method(programFieldString)/*programFieldString*/);
+            SortKey sort_key_ru = exec_compareInfo_ru.GetSortKey(Localization_return_source_value_Method(localizationFieldString)/*localizationFieldString*/);
+
             return SortKey.Compare(sort_key_en, sort_key_ru);
         }
         public ObservableCollection<Group_of_Notes> Union_Grps_Method(ObservableCollection<Group_Panel_Data> my_grps, ObservableCollection<Group_Panel_Data> deleg_grps)
@@ -156,7 +176,7 @@ namespace Daily_Planner_V_4
             catch (Exception)
             {
 
-                MessageBox.Show(Properties.Languages.Lang.Saving_Error_Message);
+                System.Windows.MessageBox.Show(Properties.Languages.Lang.Saving_Error_Message);
             }
         }
         private void Xml_auxillary_serialize_Method <T> (ObservableCollection<T> data, string file_path)

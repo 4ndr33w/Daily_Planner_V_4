@@ -31,8 +31,6 @@ namespace Daily_Planner_V_4
 
         ObservableCollection<Group_of_Notes> union_grps = new ObservableCollection<Group_of_Notes>();
 
-
-
         List<Group_of_Notes> grp_list = new List<Group_of_Notes>();
         
         ObservableCollection<Group_Panel_Data> grp_panel = new ObservableCollection<Group_Panel_Data>();
