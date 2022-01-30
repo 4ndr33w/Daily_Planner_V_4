@@ -85,20 +85,34 @@ namespace Daily_Planner_V_4
             //MainWindow Form1 = new MainWindow();
             bool result = false;
 
-            if (this.Color == compate_data.Color && this.Group_Name == compate_data.Group_Name)
+            if (Color == compate_data.Color && this.Group_Name == compate_data.Group_Name &&  
+                (((Execution_of == StrDataRepository.Executor_Me_En || Execution_of == StrDataRepository.Executor_Me_Ru) && (compate_data.Execution_of == StrDataRepository.Executor_Me_En || compate_data.Execution_of == StrDataRepository.Executor_Me_Ru) ) || 
+                ((this.Execution_of == StrDataRepository.Executor_Deleg_En || this.Execution_of == StrDataRepository.Executor_Deleg_Ru) && (compate_data.Execution_of == StrDataRepository.Executor_Deleg_En || compate_data.Execution_of == StrDataRepository.Executor_Deleg_Ru))))
             {
-                if (compate_data.Execution_of == StrDataRepository.Executor_Me_En || compate_data.Execution_of == StrDataRepository.Executor_Me_Ru)
-                {
-                    if (this.Execution_of == StrDataRepository.Executor_Me_En || this.Execution_of == StrDataRepository.Executor_Me_Ru)
-                        result = true;
-                }
-                else if (compate_data.Execution_of == StrDataRepository.Executor_Deleg_En || compate_data.Execution_of == StrDataRepository.Executor_Deleg_Ru)
-                {
-                    if (this.Execution_of == StrDataRepository.Executor_Deleg_En || this.Execution_of == StrDataRepository.Executor_Deleg_Ru)
-                        result = true;
-                }
+                result = true;
                 return result;
             }
+
+
+            //    ((Execution_of == StrDataRepository.Executor_Me_En || Execution_of == StrDataRepository.Executor_Me_Ru) && (compate_data.Execution_of == StrDataRepository.Executor_Me_En || compate_data.Execution_of == StrDataRepository.Executor_Me_Ru) )
+                
+            //    )
+
+
+            //if (this.Color == compate_data.Color && this.Group_Name == compate_data.Group_Name)
+            //{
+            //    if (compate_data.Execution_of == StrDataRepository.Executor_Me_En || compate_data.Execution_of == StrDataRepository.Executor_Me_Ru)
+            //    {
+            //        if (this.Execution_of == StrDataRepository.Executor_Me_En || this.Execution_of == StrDataRepository.Executor_Me_Ru)
+            //            result = true;
+            //    }
+            //    else if (compate_data.Execution_of == StrDataRepository.Executor_Deleg_En || compate_data.Execution_of == StrDataRepository.Executor_Deleg_Ru)
+            //    {
+            //        if (this.Execution_of == StrDataRepository.Executor_Deleg_En || this.Execution_of == StrDataRepository.Executor_Deleg_Ru)
+            //            result = true;
+            //    }
+            //    return result;
+            //}
             else return result;
 
         }

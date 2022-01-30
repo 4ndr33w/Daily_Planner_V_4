@@ -132,6 +132,29 @@ namespace Daily_Planner_V_4
             Environment.Exit(0);
         }
 
+        public int Find_Index_Of_Equal_Grp_In_Collection(Group_of_Notes note_Grp, ObservableCollection<Group_of_Notes> note_Grp_Collection)
+        {
+            int index = -1;
+            //try
+            //{
+            for (int i = 0; i < note_Grp_Collection.Count; i++)
+            {
+                if (note_Grp_Collection[i].Group_Name == note_Grp.Group_Name && note_Grp_Collection[i].Color == note_Grp.Color &&
+                    ((note_Grp_Collection[i].Execution_of == StrDataRepository.Executor_Me_En) || (note_Grp_Collection[i].Execution_of == StrDataRepository.Executor_Me_Ru)))
+                {
+                    index = i;
+                }
+
+                if (note_Grp_Collection[i].Group_Name == note_Grp.Group_Name &&
+                   note_Grp_Collection[i].Color == note_Grp.Color &&
+                   ((note_Grp_Collection[i].Execution_of == StrDataRepository.Executor_Deleg_En) || (note_Grp_Collection[i].Execution_of == StrDataRepository.Executor_Deleg_Ru)))
+                {
+                    index = i;
+                }
+            }
+            return index;
+        }
+
         private void Btn_Add_Grp_My_Tasks_Click(object sender, RoutedEventArgs e)
         {
             Add_Grp_Window grp_create_wndw = new Add_Grp_Window();
@@ -219,7 +242,8 @@ namespace Daily_Planner_V_4
         public ObservableCollection<Group_of_Notes> XML_Grps_Deserialization(string directory)
         {
             ObservableCollection<Group_of_Notes> temp_grps = new ObservableCollection<Group_of_Notes>();
-            List<Note_Data> temp_notes_as_grps = new List<Note_Data>();
+            List<Note_Data> temp_notes = new List<Note_Data>();
+            List<Group_of_Notes> temp_notes_grps = new List<Group_of_Notes>();
             try
             {
                
@@ -233,41 +257,60 @@ namespace Daily_Planner_V_4
                     temp_grps = xml_serializer.Deserialize(fStream) as ObservableCollection<Group_of_Notes>;
                     fStream.Close();
                 }
-                if (File.Exists(note_file_path) && !File.Exists(grps_file_path))
+                // загружаем группы из файла с заметками при существующем файле групп;   сравниваем с уже существующими группами
+                if (File.Exists(note_file_path) && File.Exists(grps_file_path))
                 {
                     XmlSerializer xml_serializer = new XmlSerializer(typeof(List<Note_Data>));
                     Stream fStream = new FileStream(note_file_path, FileMode.Open, FileAccess.Read);
-                    temp_notes_as_grps = xml_serializer.Deserialize(fStream) as List<Note_Data>;
+                    temp_notes = xml_serializer.Deserialize(fStream) as List<Note_Data>;
                     fStream.Close();
-                    for (int i = 0; i < temp_notes_as_grps.Count; i++)
+
+                    for (int i = 0; i < temp_notes.Count; i++)
                     {
-                        if (!temp_grps.Contains(temp_notes_as_grps[i]))
+                        temp_notes_grps.Add(new Group_of_Notes(temp_notes[i].Group));
+                    }
+
+                    for (int i = 0; i < temp_notes_grps.Count; i++)
+                    {
+                        if (Find_Index_Of_Equal_Grp_In_Collection(temp_notes[i].Group, temp_grps) > -1)
                         {
-                            temp_grps.Add(new Group_of_Notes(temp_notes_as_grps[i].Group));
+                            temp_notes_grps.RemoveAt(i);
                         }
+                        else temp_grps.Add(new Group_of_Notes(temp_notes_grps[i]));
+                        return temp_grps;
                     }
                 }
+                //загружаем группы из файла заметок в отсутствие файла групп;  // удаляем дублирующиеся группы 
                 else if (File.Exists(note_file_path) && !File.Exists(grps_file_path))
                 {
                     XmlSerializer xml_serializer = new XmlSerializer(typeof(List<Note_Data>));
                     Stream fStream = new FileStream(note_file_path, FileMode.Open, FileAccess.Read);
-                    temp_notes_as_grps = xml_serializer.Deserialize(fStream) as List<Note_Data>;
+                    temp_notes = xml_serializer.Deserialize(fStream) as List<Note_Data>;
                     fStream.Close();
-                    for (int i = 0; i < temp_notes_as_grps.Count; i++)
+                    ObservableCollection<Group_of_Notes> temp_notes_grps_observable = new ObservableCollection<Group_of_Notes>();
+
+                    for (int i = 0; i < temp_notes.Count; i++)
                     {
-                        if (temp_grps.Contains(temp_notes_as_grps[i]))
+                        temp_notes_grps_observable.Add(new Group_of_Notes(temp_notes[i].Group));
+                    }
+                    // пришлось 3 раза прогнать проверку на дублирование групп чтоб удалились ВСЕ,млять, мать их, дублирующиеся группы... даже 2-х раз,сцуко,млять, #$%дец, недостаточно!!!
+                    for (int k = 0; k < 3; k++)
+                    {
+                        for (int i = 0; i < temp_notes_grps_observable.Count; i++)
                         {
-                            temp_grps.Add(new Group_of_Notes(temp_notes_as_grps[i].Group));
+                            for (int j = i + 1; j < temp_notes_grps_observable.Count; j++)
+                            {
+                                if (temp_notes_grps_observable[i].Grp_equals(temp_notes_grps_observable[j])) temp_notes_grps_observable.RemoveAt(i);
+                            }
                         }
                     }
+                    temp_grps = temp_notes_grps_observable;
+                    return temp_grps;
                 }
-
-
                 return temp_grps;
             }
             catch (Exception)
             {
-
                 return temp_grps;
             }
             
