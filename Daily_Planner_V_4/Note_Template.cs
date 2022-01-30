@@ -24,7 +24,7 @@ namespace Daily_Planner_V_4
         public string Foreground { get => _foreground; set => _foreground = value; }
         public string Expired_Foreground { get => _expired_foreground; set => _expired_foreground = value; }
         public string Btn_Hide_Compl_or_Exp_note_Visibility { get => _btn_hide_completed_or_expired_note_visibility; set => _btn_hide_completed_or_expired_note_visibility = value; }
-        public string _Mart_to_Complete_note_Visibility { get => _mark_to_complete_note_visibility; set => _mark_to_complete_note_visibility = value; }
+        public string Mart_to_Complete_note_Visibility { get => _mark_to_complete_note_visibility; set => _mark_to_complete_note_visibility = value; }
         public string Expired { get => _expired; set => _expired = value; }
 
         public Note_Template(Note_Template note) : base()

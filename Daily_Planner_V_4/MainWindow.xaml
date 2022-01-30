@@ -27,7 +27,8 @@
             <Setter Property="Button.FontSize" Value="8"/>
             <Setter Property="ItemsControl.Foreground" Value="Red"/>
             <Setter Property="Button.FontStyle" Value="Normal"/>
-            <Setter Property="ItemsControl.Visibility" Value="{Binding Delete_task_group_btn_visibility}"/>
+
+            <Setter Property="ItemsControl.Visibility" Value="Hidden"/>
         </Style>
         <Style x:Key="style_Group_Panel_Dock_Counters">
             <Setter Property="DockPanel.HorizontalAlignment" Value="Stretch"/>
@@ -124,7 +125,7 @@
                             <StackPanel Margin="1,5,1,5" Height="Auto" HorizontalAlignment="Stretch">
                                 <Calendar/>
                             </StackPanel>
-                            <Button x:Name="Btn_Show_Today_Notes" Background="Transparent" Margin="0,2,0,0">
+                            <Button x:Name="Btn_Show_Today_Notes" Background="Transparent" Margin="0,2,0,0" Click="Btn_Show_Today_Notes_Click">
                                 <DockPanel>
                                     <StackPanel Orientation="Horizontal" Style="{StaticResource style_Group_Panel_Dock_Counters}">
                                         <StackPanel Orientation="Horizontal">
@@ -142,7 +143,7 @@
                                 </DockPanel>
 
                             </Button>
-                            <Button x:Name="Btn_Show_All_Notes" Background="Transparent" Margin="0,5,0,0">
+                            <Button x:Name="Btn_Show_All_Notes" Background="Transparent" Margin="0,5,0,0" Click="Btn_Show_All_Notes_Click">
                                 <DockPanel Style="{StaticResource style_Group_Panel_Dock_Counters}">
 
                                     <TextBox Text="{x:Static language:Lang.Total_Notes_string}" 
@@ -177,7 +178,8 @@
                                                      Margin="0,0,0,0" 
                                                      SelectionMode="Single"
                                                      VerticalAlignment="Stretch" 
-                                                     Background="Transparent">
+                                                     Background="Transparent"
+                                                     SelectionChanged="ListBx_Grp_Of_My_Tasks_SelectionChanged">
                                                 <ListBox.ItemTemplate>
                                                     <DataTemplate>
                                                         <Label>
@@ -195,7 +197,9 @@
                                                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" DockPanel.Dock="Left">
                                                                                 <Button x:Name="Btn_my_task_group_delete_group"
                                                                                         Style="{StaticResource Style_Group_Panel_Btn_delete_group}"
-                                                                                        Visibility="{Binding Delete_Grp_Btn_visibility}"/>
+                                                                                        Visibility="Visible"
+                                                                                        Click="Btn_my_task_group_delete_group_Click"/>
+                                                                                <!--Visibility="{Binding Delete_Grp_Btn_visibility}"-->
                                                                                 <!--Content="X"
                                                                                         Padding="0,0,0,1"
                                                                                         Width="16"
@@ -276,7 +280,13 @@
                                                 Content="{x:Static language:Lang.Add_Grp_Btn}"
                                                 Click="Btn_Add_New_Delegated_Task_Group_Click"/>
 
-                                        <ListBox x:Name="ListBx_Grp_Of_Delegated_Tasks" Background="Transparent" SelectionMode="Single">
+                                        <ListBox x:Name="ListBx_Grp_Of_Delegated_Tasks" 
+                                                 HorizontalAlignment="Stretch" 
+                                                 Margin="0,0,0,0" 
+                                                 SelectionMode="Single"
+                                                 VerticalAlignment="Stretch" 
+                                                 Background="Transparent"
+                                                 SelectionChanged="ListBx_Grp_Of_Delegated_Tasks_SelectionChanged">
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -289,7 +299,8 @@
                                                             <StackPanel Orientation="Horizontal">
                                                                 <Button x:Name="Btn_delegated_task_group_delete_group"
                                                                         Style="{StaticResource Style_Group_Panel_Btn_delete_group}"
-                                                                        Visibility="{Binding Delete_Grp_Btn_visibility}"/>
+                                                                        Visibility="Visible"
+                                                                        Click="Btn_delegated_task_group_delete_group_Click"/>
 
                                                                 <Label  DockPanel.Dock="Left" 
                                                                         Background="{Binding Color}" 
@@ -405,7 +416,7 @@
                                                                             BorderBrush="Transparent"
                                                                             BorderThickness="0"
                                                                             Background="Transparent"
-                                                                            Visibility="{Binding Hide_Note_Btn_Visibility}"
+                                                                            Visibility="{Binding Btn_Hide_Compl_or_Exp_note_Visibility}"
                                                                             DockPanel.Dock="Right">
                                                                         <Border BorderBrush="White" 
                                                                                 BorderThickness="3" 
@@ -420,18 +431,18 @@
                                                                         </Border>
                                                                     </Button>
 
-                                                                    <TextBlock Text="{Binding Urgency_Expired_Complete_Title}" Margin="5,2,5,2" FontSize="14" FontStyle="Oblique" FontStretch="ExtraExpanded"/>
+                                                                    <TextBlock Text="{Binding Status_Title}" Margin="5,2,5,2" FontSize="14" FontStyle="Oblique" FontStretch="ExtraExpanded"/>
                                                                     <TextBlock Text="{Binding Expired}" Foreground="White" FontSize="14" FontStyle="Oblique" FontStretch="ExtraExpanded"/>
                                                                 </DockPanel>
                                                             </StackPanel>
 
                                                             <StackPanel Orientation="Vertical">
                                                                 <DockPanel>
-                                                                    <TextBlock Text="{Binding Who_string}" Margin="10,1,0,1"/>
+                                                                    <TextBlock Text="{x:Static language:Lang.Who_string}" Margin="10,1,0,1"/>
                                                                     <TextBlock Text="{Binding Executor}" Margin="5,1,5,1"/>
                                                                     <StackPanel DockPanel.Dock="Right">
                                                                         <Button x:Name="Btn_complete_task" 
-                                                                                  Visibility="{Binding Mark_To_Complete_Btn_Visibility}"
+                                                                                  Visibility="{Binding Mart_to_Complete_note_Visibility}"
                                                                                   Margin="10,1,5,1" 
                                                                                 Width="80"
                                                                                 HorizontalContentAlignment="Center"

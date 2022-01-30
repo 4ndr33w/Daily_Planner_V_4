@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Daily_Planner_V_4
 {
-    public class Note_Data
+    public class Note_Data : Group_of_Notes
     {
         protected DateTime _date;
         protected string _note;

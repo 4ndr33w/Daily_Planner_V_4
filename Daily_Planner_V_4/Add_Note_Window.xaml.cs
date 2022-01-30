@@ -22,10 +22,6 @@ namespace Daily_Planner_V_4
     {
         strings_data_repository strings_;
         Time_Range_For_AddNoteWndw_TimePicker time_picker_range = new Time_Range_For_AddNoteWndw_TimePicker();
-        List<string> time_picker_1h_range = new List<string>();
-        List<string> time_picker_30min_range = new List<string>();
-        List<string> time_picker_10min_range = new List<string>();
-        List<string> time_picker_5min_range = new List<string>();
 
         List<string> time_picker_source = new List<string>();
 
@@ -36,51 +32,26 @@ namespace Daily_Planner_V_4
         ObservableCollection<Group_Panel_Data> grp_panel = new ObservableCollection<Group_Panel_Data>();
         List<Note_Data> note_data = new List<Note_Data>();
         ObservableCollection<Note_Template> note_template = new ObservableCollection<Note_Template>();
+
+        Note_Data current_note = new Note_Data();
+        Group_of_Notes current_grp = new Group_of_Notes();
         public Add_Note_Window()
         {
             InitializeComponent();
             loas_defaults();
-            time_picker_source = time_picker_1h_range;
+            time_picker_source = time_picker_range.Choose_Time_Range(Properties.Languages.Lang.note_time_range_1_hour); //time_picker_1h_range;
             time_picker.Items.Clear();
             time_picker.ItemsSource = time_picker_source;
         }
         private void loas_defaults()
         {
-            time_picker_1h_range = time_picker_range.Choose_Time_Range(/*"1 час"*/Properties.Languages.Lang.note_time_range_1_hour);
-            time_picker_30min_range = time_picker_range.Choose_Time_Range(/*"30 мин"*/Properties.Languages.Lang.note_time_range_30_min);
-            time_picker_10min_range = time_picker_range.Choose_Time_Range(/*"10 мин"*/Properties.Languages.Lang.note_time_range_10_min);
-            time_picker_5min_range = time_picker_range.Choose_Time_Range(/*"5 мин"*/Properties.Languages.Lang.note_time_range_5_min);
-
             MainWindow Form1 = new MainWindow();
 
             union_grps = Form1.Union_Grps_Method(Form1.my_Grps_Panel, Form1.delegated_Grps_Panel);
-
             CmbBox_Task_Groups.ItemsSource = union_grps;
             CmbBox_Task_Groups.Items.Refresh();
         }
-        private List<string> time_picker_ranges_return (string time_range_string)
-        {
-            MainWindow Form1 = new MainWindow();
-            string time_picker_ignore_locale_text = Form1.Localization_return_source_value_Method(time_range_string);
-            //int compare_result = Form1.Localization_Compare_Method(time_range_string, Properties.Languages.Lang.note_time_range_1_hour);
-            if (Form1.Localization_Compare_Method(time_range_string, Properties.Languages.Lang.note_time_range_1_hour) == 0/*time_range_string == Properties.Languages.Lang.note_time_range_1_hour*/)
-            {
-                return time_picker_1h_range;
-            }
-            if (Form1.Localization_Compare_Method(time_range_string, Properties.Languages.Lang.note_time_range_30_min) == 0/*time_range_string == Properties.Languages.Lang.note_time_range_30_min*/)
-            {
-                return time_picker_30min_range;
-            }
-            if (Form1.Localization_Compare_Method(time_range_string, Properties.Languages.Lang.note_time_range_10_min) == 0)
-            {
-                return time_picker_10min_range;
-            }
-            if (Form1.Localization_Compare_Method(time_range_string, Properties.Languages.Lang.note_time_range_5_min) == 0)
-            {
-                return time_picker_5min_range;
-            }
-            else return null;
-        }
+       
         private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             MainWindow Form1 = new MainWindow();
@@ -101,7 +72,45 @@ namespace Daily_Planner_V_4
 
         private void new_task_Window_OK_Button_Click(object sender, RoutedEventArgs e)
         {
+            MainWindow Form1 = this.Owner as MainWindow;
+            union_grps = Form1.Union_Grps_Method(Form1.my_Grps_Panel, Form1.delegated_Grps_Panel);
+
+            if (date_picker.Text == String.Empty) { date_picker.Text = DateTime.Now.ToShortDateString(); }
+            else if (time_picker.Text == String.Empty) { time_picker.Text = DateTime.Now.ToShortTimeString(); }
+
+            int cmbBx_grps_selected_index = CmbBox_Task_Groups.SelectedIndex > -1 ? SelectedInCmboBx_Group_Index(union_grps, CmbBox_Task_Groups) : -1; // = CmbBox_Task_Groups.SelectedIndex; // > -1 ? CmbBox_Task_Groups.SelectedIndex : -1; // = SelectedInCmboBx_Group_Index(union_grps, CmbBox_Task_Groups);
+
+            if (Form1.create_new_note == true/*strings_.CreateOrEditNote_Mode == "create"*/)
+            {
+                current_note.Header = (txtBx_Header_name.Text != String.Empty || txtBx_Header_name.Text != Properties.Languages.Lang.Enter_Header_string) ? txtBx_Header_name.Text : Properties.Languages.Lang.Note_Default_Header;
+                current_note.Executor = (txtBx_Executor.Text != String.Empty || txtBx_Executor.Text != Properties.Languages.Lang.new_note_executor_empty_string) ? txtBx_Executor.Text : Properties.Languages.Lang.Executor_string_Me;
+                current_note.Date = Convert.ToDateTime(date_picker.Text + ' ' + time_picker.Text);
+                current_note.Creation_Date = DateTime.Now;
+                current_note.Urgency = chkBx_Urgency.IsChecked == true ? true : false;
+                current_note.Note = (new TextRange(txtBx_Note_TextBox.Document.ContentStart, txtBx_Note_TextBox.Document.ContentEnd)).Text;
+
+                //current_grp = cmbBx_grps_selected_index > -1 ? union_grps[cmbBx_grps_selected_index] : current_grp;
+                current_note.Group = current_grp; // cmbBx_grps_selected_index > -1 ? union_grps[cmbBx_grps_selected_index] : current_grp;
+                current_note.Color = current_grp.Color; // union_grps[cmbBx_grps_selected_index].Color;
+
+                Form1.note_template.Add(new Note_Template(current_note));
+                Form1.ListBx_Stack_Of_Notes.Items.Refresh();
+            }
+
             this.Hide();
+        }
+
+        private int SelectedInCmboBx_Group_Index (ObservableCollection<Group_of_Notes> grps_collection, ComboBox cmbBx_as_grp)
+        {
+            int index = -1;
+            for (int i = 0; i < grps_collection.Count; i++)
+            {
+                if ((cmbBx_as_grp.SelectedItem as Group_of_Notes).Grp_equals(grps_collection[i]))
+                {
+                    index = i;
+                }
+            }
+            return index;
         }
 
         private void txtBx_Header_name_IsMouseCapturedChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -136,21 +145,21 @@ namespace Daily_Planner_V_4
 
         private void time_range_comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            time_picker_source = time_picker_ranges_return(time_range_comboBox.Text);
+            time_picker_source = time_picker_range.Choose_Time_Range(time_range_comboBox.Text);
             time_picker.ItemsSource = time_picker_source;
             time_picker.Items.Refresh();
         }
 
         private void time_range_comboBox_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            time_picker_source = time_picker_ranges_return(time_range_comboBox.Text);
+            time_picker_source = time_picker_range.Choose_Time_Range(time_range_comboBox.Text);
             time_picker.ItemsSource = time_picker_source;
             time_picker.Items.Refresh();
         }
 
         private void time_range_comboBox_DropDownClosed(object sender, EventArgs e)
         {
-            time_picker_source = time_picker_ranges_return(time_range_comboBox.Text);
+            time_picker_source = time_picker_range.Choose_Time_Range(time_range_comboBox.Text);
             time_picker.ItemsSource = time_picker_source;
             time_picker.Items.Refresh();
         }
@@ -188,6 +197,9 @@ namespace Daily_Planner_V_4
                 {
                     txtBx_Executor.Text = executor;
                 }
+                current_grp.Color = (CmbBox_Task_Groups.SelectedItem as Group_of_Notes).Color;
+                current_grp.Execution_of = (CmbBox_Task_Groups.SelectedItem as Group_of_Notes).Execution_of;
+                current_grp.Group_Name = (CmbBox_Task_Groups.SelectedItem as Group_of_Notes).Group_Name;
             }
             else return;
         }

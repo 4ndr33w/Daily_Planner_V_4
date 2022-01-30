@@ -82,12 +82,66 @@ namespace Daily_Planner_V_4
         //}
         public bool Grp_equals(Group_of_Notes compate_data)
         {
-            MainWindow Form1 = new MainWindow();
-            if (this.Color == compate_data.Color && this.Group_Name == compate_data.Group_Name &&
-                this.Localization_Compare_Method(compate_data.Execution_of) == 0)
+            //MainWindow Form1 = new MainWindow();
+            bool result = false;
+
+            if (this.Color == compate_data.Color && this.Group_Name == compate_data.Group_Name)
+            {
+                if (compate_data.Execution_of == "Me" || compate_data.Execution_of == "Я")
+                {
+                    if (this.Execution_of == "Me" || this.Execution_of == "Я")
+                        result = true;
+                }
+                else if (compate_data.Execution_of == "Delegated" || compate_data.Execution_of == "Поручено")
+                {
+                    if (this.Execution_of == "Delegated" || this.Execution_of == "Поручено")
+                        result = true;
+                }
+                return result;
+            }
+            else return result;
+
+        }
+
+        public bool my_grps_equals (Group_of_Notes compate_data)
+        {
+            bool result = false;
+
+            if (this.Color == compate_data.Color && this.Group_Name == compate_data.Group_Name)
+            {
+                if (compate_data.Execution_of == "Me" || compate_data.Execution_of == "Я")
+                {
+                    if (this.Execution_of == "Me" || this.Execution_of == "Я")
+                        result = true;
+                }
+                return result;
+            }
+            else return result;
+        }
+        public bool deleg_grps_equals(Group_of_Notes compate_data)
+        {
+            bool result = false;
+
+            if (this.Color == compate_data.Color && this.Group_Name == compate_data.Group_Name)
+            {
+               if (compate_data.Execution_of == "Delegated" || compate_data.Execution_of == "Поручено")
+                {
+                    if (this.Execution_of == "Delegated" || this.Execution_of == "Поручено")
+                        result = true;
+                }
+                return result;
+            }
+            else return result;
+        }
+
+
+        public bool Grp_Executor_Equals(Group_of_Notes compate_data)
+        {
+            //MainWindow Form1 = new MainWindow();
+            if ((((this.Execution_of == "Me" || this.Execution_of == "Я") && (compate_data.Execution_of == "Me" || compate_data.Execution_of == "Я"))) ||
+                ((this.Execution_of == "Delegated" || this.Execution_of == "Поручено") && (compate_data.Execution_of == "Delegated" || compate_data.Execution_of == "Поручено")))
                 return true;
             else return false;
-
         }
 
         //public override bool Equals(Group_of_Notes compare_data)

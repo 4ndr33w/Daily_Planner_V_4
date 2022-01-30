@@ -25,7 +25,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationRevision>3</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -93,6 +93,12 @@
     <Compile Include="Add_Note_Window.xaml.cs">
       <DependentUpon>Add_Note_Window.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Delete_Grp_Request_Window.xaml.cs">
+      <DependentUpon>Delete_Grp_Request_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Delete_Note_Request_Window.xaml.cs">
+      <DependentUpon>Delete_Note_Request_Window.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Lang.xaml.cs" />
     <Compile Include="Lang_Change_Message_Window.xaml.cs">
       <DependentUpon>Lang_Change_Message_Window.xaml</DependentUpon>
@@ -104,6 +110,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Add_Note_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Delete_Grp_Request_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Delete_Note_Request_Window.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
