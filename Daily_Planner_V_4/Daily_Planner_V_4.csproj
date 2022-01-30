@@ -25,7 +25,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationRevision>4</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -103,7 +103,7 @@
     <Compile Include="Lang_Change_Message_Window.xaml.cs">
       <DependentUpon>Lang_Change_Message_Window.xaml</DependentUpon>
     </Compile>
-    <Compile Include="strings_data_repository.cs" />
+    <Compile Include="StrDataRepository.cs" />
     <Compile Include="Time_Range_For_AddNoteWndw_TimePicker.cs" />
     <Page Include="Add_Grp_Window.xaml">
       <SubType>Designer</SubType>

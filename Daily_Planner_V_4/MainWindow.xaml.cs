@@ -28,7 +28,7 @@ namespace Daily_Planner_V_4
     /// </summary>
     public partial class MainWindow : Window
     {
-        public strings_data_repository strings_ = new strings_data_repository();
+        public StrDataRepository strings_ = new StrDataRepository();
         public ObservableCollection<Group_Panel_Data> my_Grps_Panel = new ObservableCollection<Group_Panel_Data>();
         public ObservableCollection<Group_Panel_Data> delegated_Grps_Panel = new ObservableCollection<Group_Panel_Data>();
         public ObservableCollection<Group_of_Notes> union_Grps = new ObservableCollection<Group_of_Notes>();
@@ -48,10 +48,13 @@ namespace Daily_Planner_V_4
         }
         public void Load_Default_Data()
         {
-            union_Grps = XML_Deserialization(strings_.Grps_Save_Path);
+            union_Grps = XML_Grps_Deserialization(StrDataRepository.directory);
+            note_template = Fill_Note_Template_From_List_Data_and_sortByDate(   XML_Note_Deserialization(strings_.Note_Data_Save)  );
             Fill_Grps_From_Union(union_Grps);
             ListBx_Grp_Of_My_Tasks.ItemsSource = my_Grps_Panel;
             ListBx_Grp_Of_Delegated_Tasks.ItemsSource = delegated_Grps_Panel;
+            ListBx_Stack_Of_Notes.ItemsSource = note_template;
+            ListBx_Stack_Of_Notes.Items.Refresh();
             ListBx_Grp_Of_My_Tasks.Items.Refresh();
             ListBx_Grp_Of_Delegated_Tasks.Items.Refresh();
         }
@@ -64,11 +67,11 @@ namespace Daily_Planner_V_4
             {
                 foreach (var grp in temp_data)
                 {
-                    if (grp.Execution_of == "Я" || grp.Execution_of == "Me")
+                    if (grp.Execution_of == StrDataRepository.Executor_Me_Ru || grp.Execution_of == StrDataRepository.Executor_Me_En)
                     {
                         my_Grps_Panel.Add(new Group_Panel_Data(grp));
                     }
-                    if (grp.Execution_of == "Delegated" || grp.Execution_of == "Поручено")
+                    if (grp.Execution_of == StrDataRepository.Executor_Deleg_En || grp.Execution_of == StrDataRepository.Executor_Deleg_Ru)
                     {
                         delegated_Grps_Panel.Add(new Group_Panel_Data(grp));
                     }
@@ -117,8 +120,6 @@ namespace Daily_Planner_V_4
         }
         private void menu_eng_lang_Click(object sender, RoutedEventArgs e)
         {
-            //Properties.Languages.Lang.Executor_string_Me = CultureInfo.
-            //Localization_Compare_Method(my_Grps_Panel[0].Execution_of, Properties.Languages.Lang.Executor_string_Me);
             Language_Change_Method("en-GB");
         }
 
@@ -152,6 +153,8 @@ namespace Daily_Planner_V_4
         }
         public void XML_Serialization <T>(ObservableCollection<T> data_to_serialize, string directory)
         {
+            ObservableCollection<Note_Data> temp_data = new ObservableCollection<Note_Data>();
+            ObservableCollection<T> data = new ObservableCollection<T>();
             try
             {
                 string file_path = directory;
@@ -159,9 +162,45 @@ namespace Daily_Planner_V_4
                 {
                     Directory.CreateDirectory(directory);
                 }
-                if (data_to_serialize is ObservableCollection<Group_of_Notes>) { file_path = directory + strings_.Grps_FileName; }
-                if (data_to_serialize is ObservableCollection<Note_Data>) { file_path = directory + strings_.Note_Data_Save; }
-                Xml_auxillary_serialize_Method (data_to_serialize, file_path);
+                if (data_to_serialize is ObservableCollection<Group_of_Notes>) { file_path = directory + strings_.Grps_Short_FileName; Xml_auxillary_serialize_Method(data_to_serialize, file_path); }
+                //else if (data_to_serialize is ObservableCollection<Note_Data>) { file_path = directory + strings_.Note_Data_Save; }
+                else if (data_to_serialize is ObservableCollection<Note_Template> && 
+                    ((data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title == StrDataRepository.Status_Completed_En ||
+                    (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title == StrDataRepository.Status_Completed_Ru))
+                {
+                    file_path = directory + strings_.Completed_Note_Data_Save;
+                    foreach (var note in data_to_serialize as ObservableCollection<Note_Template>)
+                    {
+                        temp_data.Add(new Note_Data(note));
+                    }
+                    Xml_auxillary_serialize_Method(temp_data, file_path);
+                }
+
+                else if (data_to_serialize is ObservableCollection<Note_Template> &&
+                   ((data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title == StrDataRepository.Status_Expired_En ||
+                   (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title == StrDataRepository.Status_Expired_Ru))
+                {
+                    file_path = directory + strings_.Completed_Note_Data_Save;
+                    foreach (var note in data_to_serialize as ObservableCollection<Note_Template>)
+                    {
+                        temp_data.Add(new Note_Data(note));
+                    }
+                    Xml_auxillary_serialize_Method(temp_data, file_path);
+                }
+                else if (data_to_serialize is ObservableCollection<Note_Template> &&
+                 (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title != StrDataRepository.Status_Expired_En &&
+                 (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title != StrDataRepository.Status_Expired_Ru &&
+                 (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title != StrDataRepository.Status_Completed_En &&
+                 (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title != StrDataRepository.Status_Completed_Ru ) 
+                {
+                    file_path = /*directory + */strings_.Note_Data_Save;
+                    foreach (var note in data_to_serialize as ObservableCollection<Note_Template>)
+                    {
+                        temp_data.Add(new Note_Data(note));
+                    }
+                    Xml_auxillary_serialize_Method(temp_data, file_path);
+                }
+
             }
             catch (Exception)
             {
@@ -177,17 +216,107 @@ namespace Daily_Planner_V_4
             xml_serializer.Serialize(fstream, data);
             fstream.Close();
         }
-        public ObservableCollection<Group_of_Notes> XML_Deserialization(string file_path)
+        public ObservableCollection<Group_of_Notes> XML_Grps_Deserialization(string directory)
         {
-            ObservableCollection<Group_of_Notes> temp_data = new ObservableCollection<Group_of_Notes>();
-            if (File.Exists(file_path))
+            ObservableCollection<Group_of_Notes> temp_grps = new ObservableCollection<Group_of_Notes>();
+            List<Note_Data> temp_notes_as_grps = new List<Note_Data>();
+            try
             {
-                XmlSerializer xml_serializer = new XmlSerializer(temp_data.GetType());
-                Stream fStream = new FileStream(file_path, FileMode.Open, FileAccess.Read);
-                temp_data = xml_serializer.Deserialize(fStream) as ObservableCollection<Group_of_Notes>;
-                fStream.Close();
+               
+                string grps_file_path = directory + StrDataRepository.grps_short_fileName;
+                string note_file_path = directory + StrDataRepository.note_short_fileName;
+                //MessageBox.Show(note_file_path);
+                if (File.Exists(grps_file_path))
+                {
+                    XmlSerializer xml_serializer = new XmlSerializer(temp_grps.GetType());
+                    Stream fStream = new FileStream(grps_file_path, FileMode.Open, FileAccess.Read);
+                    temp_grps = xml_serializer.Deserialize(fStream) as ObservableCollection<Group_of_Notes>;
+                    fStream.Close();
+                }
+                if (File.Exists(note_file_path) && !File.Exists(grps_file_path))
+                {
+                    XmlSerializer xml_serializer = new XmlSerializer(typeof(List<Note_Data>));
+                    Stream fStream = new FileStream(note_file_path, FileMode.Open, FileAccess.Read);
+                    temp_notes_as_grps = xml_serializer.Deserialize(fStream) as List<Note_Data>;
+                    fStream.Close();
+                    for (int i = 0; i < temp_notes_as_grps.Count; i++)
+                    {
+                        if (!temp_grps.Contains(temp_notes_as_grps[i]))
+                        {
+                            temp_grps.Add(new Group_of_Notes(temp_notes_as_grps[i].Group));
+                        }
+                    }
+                }
+                else if (File.Exists(note_file_path) && !File.Exists(grps_file_path))
+                {
+                    XmlSerializer xml_serializer = new XmlSerializer(typeof(List<Note_Data>));
+                    Stream fStream = new FileStream(note_file_path, FileMode.Open, FileAccess.Read);
+                    temp_notes_as_grps = xml_serializer.Deserialize(fStream) as List<Note_Data>;
+                    fStream.Close();
+                    for (int i = 0; i < temp_notes_as_grps.Count; i++)
+                    {
+                        if (temp_grps.Contains(temp_notes_as_grps[i]))
+                        {
+                            temp_grps.Add(new Group_of_Notes(temp_notes_as_grps[i].Group));
+                        }
+                    }
+                }
+
+
+                return temp_grps;
+            }
+            catch (Exception)
+            {
+
+                return temp_grps;
+            }
+            
+        }
+        public ObservableCollection<Note_Template> Fill_Note_Template_From_List_Data_and_sortByDate (List<Note_Data> data)
+        {
+
+            ObservableCollection<Note_Template> temp_data = new ObservableCollection<Note_Template>();
+            if (data != null)
+            {
+                data.Sort(new Note_Data.Sort_By_Date());
+                foreach (Note_Data item in data)
+                {
+                    temp_data.Add(new Note_Template(item));
+                }
+                return temp_data;
             }
             return temp_data;
+        }
+        public List<Note_Data> XML_Note_Deserialization (string path)
+        {
+            List<Note_Data> temp_data = new List<Note_Data>();
+            int last_slash_index = path.LastIndexOf(@"\");
+            string directory = path.Substring(0, last_slash_index);
+            try
+            {
+                if (!Directory.Exists(directory))
+                {
+                    return null;
+                }
+                else
+                {
+                    if (File.Exists(path))
+                    {
+                        XmlSerializer xml_serializer = new XmlSerializer(temp_data.GetType());
+                        Stream fStream = new FileStream(path, FileMode.Open, FileAccess.Read);
+                        temp_data = xml_serializer.Deserialize(fStream) as List<Note_Data>;
+                        fStream.Close();
+                        return temp_data;
+                    }
+                    
+                    else return null;
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Проблемы при загрузке файла с заметками");
+                return null;
+            }
         }
 
         private void Btn_Create_New_Note_Click(object sender, RoutedEventArgs e)
@@ -196,7 +325,7 @@ namespace Daily_Planner_V_4
             add_note_Wndw.Owner = this;
             ListBx_Stack_Of_Notes.ItemsSource = note_template;
             create_new_note = true;
-            strings_.CreateOrEditNote_Mode = "create";
+            //strings_.CreateOrEditNote_Mode = "create";
             add_note_Wndw.Show();
         }
 
@@ -351,9 +480,6 @@ namespace Daily_Planner_V_4
 
         private void Btn_my_task_group_delete_group_Click(object sender, RoutedEventArgs e)
         {
-           // ListBx_Grp_Of_My_Tasks.SelectedItem =
-
-
             if (ListBx_Grp_Of_My_Tasks.SelectedItem != null)
             {
                 Delete_Grp_Request_Window delete_grp_Wndw = new Delete_Grp_Request_Window();

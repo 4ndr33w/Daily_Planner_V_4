@@ -60,6 +60,12 @@ namespace Daily_Planner_V_4
             _status = status;
             _urgency = urgency;
             _group = grp;
+            _color = grp.Color;
+        }
+        public Note_Data(Group_of_Notes grp)
+        {
+            this._color = grp.Color;
+            _creation_date = DateTime.Now;
         }
         public class Sort_By_Group : IComparer<Note_Data>
         {

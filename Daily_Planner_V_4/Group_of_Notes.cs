@@ -87,14 +87,14 @@ namespace Daily_Planner_V_4
 
             if (this.Color == compate_data.Color && this.Group_Name == compate_data.Group_Name)
             {
-                if (compate_data.Execution_of == "Me" || compate_data.Execution_of == "Я")
+                if (compate_data.Execution_of == StrDataRepository.Executor_Me_En || compate_data.Execution_of == StrDataRepository.Executor_Me_Ru)
                 {
-                    if (this.Execution_of == "Me" || this.Execution_of == "Я")
+                    if (this.Execution_of == StrDataRepository.Executor_Me_En || this.Execution_of == StrDataRepository.Executor_Me_Ru)
                         result = true;
                 }
-                else if (compate_data.Execution_of == "Delegated" || compate_data.Execution_of == "Поручено")
+                else if (compate_data.Execution_of == StrDataRepository.Executor_Deleg_En || compate_data.Execution_of == StrDataRepository.Executor_Deleg_Ru)
                 {
-                    if (this.Execution_of == "Delegated" || this.Execution_of == "Поручено")
+                    if (this.Execution_of == StrDataRepository.Executor_Deleg_En || this.Execution_of == StrDataRepository.Executor_Deleg_Ru)
                         result = true;
                 }
                 return result;
@@ -109,9 +109,9 @@ namespace Daily_Planner_V_4
 
             if (this.Color == compate_data.Color && this.Group_Name == compate_data.Group_Name)
             {
-                if (compate_data.Execution_of == "Me" || compate_data.Execution_of == "Я")
+                if (compate_data.Execution_of == StrDataRepository.Executor_Me_En || compate_data.Execution_of == StrDataRepository.Executor_Me_Ru)
                 {
-                    if (this.Execution_of == "Me" || this.Execution_of == "Я")
+                    if (this.Execution_of == StrDataRepository.Executor_Me_En || this.Execution_of == StrDataRepository.Executor_Me_Ru)
                         result = true;
                 }
                 return result;
@@ -124,9 +124,9 @@ namespace Daily_Planner_V_4
 
             if (this.Color == compate_data.Color && this.Group_Name == compate_data.Group_Name)
             {
-               if (compate_data.Execution_of == "Delegated" || compate_data.Execution_of == "Поручено")
+               if (compate_data.Execution_of == StrDataRepository.Executor_Deleg_En || compate_data.Execution_of == StrDataRepository.Executor_Deleg_Ru)
                 {
-                    if (this.Execution_of == "Delegated" || this.Execution_of == "Поручено")
+                    if (this.Execution_of == StrDataRepository.Executor_Deleg_En || this.Execution_of == StrDataRepository.Executor_Deleg_Ru)
                         result = true;
                 }
                 return result;
@@ -138,8 +138,8 @@ namespace Daily_Planner_V_4
         public bool Grp_Executor_Equals(Group_of_Notes compate_data)
         {
             //MainWindow Form1 = new MainWindow();
-            if ((((this.Execution_of == "Me" || this.Execution_of == "Я") && (compate_data.Execution_of == "Me" || compate_data.Execution_of == "Я"))) ||
-                ((this.Execution_of == "Delegated" || this.Execution_of == "Поручено") && (compate_data.Execution_of == "Delegated" || compate_data.Execution_of == "Поручено")))
+            if ((((this.Execution_of == StrDataRepository.Executor_Me_En || this.Execution_of == StrDataRepository.Executor_Me_Ru) && (compate_data.Execution_of == StrDataRepository.Executor_Me_En || compate_data.Execution_of == StrDataRepository.Executor_Me_Ru))) ||
+                ((this.Execution_of == StrDataRepository.Executor_Deleg_En || this.Execution_of == StrDataRepository.Executor_Deleg_Ru) && (compate_data.Execution_of == StrDataRepository.Executor_Deleg_En || compate_data.Execution_of == StrDataRepository.Executor_Deleg_Ru)))
                 return true;
             else return false;
         }

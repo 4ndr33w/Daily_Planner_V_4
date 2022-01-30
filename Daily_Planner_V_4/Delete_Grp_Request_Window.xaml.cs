@@ -28,7 +28,7 @@ namespace Daily_Planner_V_4
         private void Btn_OK_Click(object sender, RoutedEventArgs e)
         {
             MainWindow Form1 = this.Owner as MainWindow;
-            strings_data_repository strings_ = new strings_data_repository(); ;
+            StrDataRepository strings_ = new StrDataRepository(); ;
 
             ObservableCollection<Note_Template> temp_note_data = new ObservableCollection<Note_Template>();
             ObservableCollection<Group_Panel_Data> my_temp_grp_panel = new ObservableCollection<Group_Panel_Data>();
@@ -62,7 +62,7 @@ namespace Daily_Planner_V_4
             union_temp_grp_data = Form1.Union_Grps_Method(my_temp_grp_panel, deleg_temp_grp_panel);
 
 
-            string save_path = strings_.Save_Path;
+            string save_path = strings_.Directory;
             Form1.XML_Serialization(union_temp_grp_data, save_path);
             Form1.XML_Serialization(temp_note_data, save_path);
             this.Hide();

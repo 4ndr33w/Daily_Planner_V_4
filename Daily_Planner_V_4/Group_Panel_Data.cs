@@ -10,14 +10,14 @@ namespace Daily_Planner_V_4
     public class Group_Panel_Data : Group_of_Notes
     {
         private int _filtered_notes_count = 0;
-        private string _delete_Grp_Btn_visibility = "Hidden";
+        private string _delete_Grp_Btn_visibility = StrDataRepository.Visibility_hidden;
         public int Filtered_notes_count { get => _filtered_notes_count; set => _filtered_notes_count = value; }
         public string Delete_Grp_Btn_visibility
         {
             get { return _delete_Grp_Btn_visibility; }
             set
             {
-                if (value == "Visible")
+                if (value == StrDataRepository.Visibility_visible)
                     _delete_Grp_Btn_visibility = value;
             }
         }

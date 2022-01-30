@@ -29,7 +29,7 @@ namespace Daily_Planner_V_4
         List<Group_of_Notes> grp_coll = new List<Group_of_Notes>();
         ObservableCollection<Group_Panel_Data> grp_panel_coll = new ObservableCollection<Group_Panel_Data>();
         ObservableCollection<Group_of_Notes> union_grp_coll = new ObservableCollection<Group_of_Notes>();
-        strings_data_repository strings_;
+        StrDataRepository strings_;
         public Add_Grp_Window()
         {
             InitializeComponent();
@@ -68,7 +68,7 @@ namespace Daily_Planner_V_4
             }
             this.Hide();
             union_grp_coll = Form1.Union_Grps_Method(Form1.my_Grps_Panel, Form1.delegated_Grps_Panel);
-            Form1.XML_Serialization(union_grp_coll, strings_.Save_Path);
+            Form1.XML_Serialization(union_grp_coll, strings_.Directory);
         }
 
 

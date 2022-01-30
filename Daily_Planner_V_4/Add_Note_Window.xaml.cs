@@ -20,7 +20,7 @@ namespace Daily_Planner_V_4
     /// </summary>
     public partial class Add_Note_Window : Window
     {
-        strings_data_repository strings_;
+        StrDataRepository strings_;
         Time_Range_For_AddNoteWndw_TimePicker time_picker_range = new Time_Range_For_AddNoteWndw_TimePicker();
 
         List<string> time_picker_source = new List<string>();
@@ -93,10 +93,10 @@ namespace Daily_Planner_V_4
                 current_note.Group = current_grp; // cmbBx_grps_selected_index > -1 ? union_grps[cmbBx_grps_selected_index] : current_grp;
                 current_note.Color = current_grp.Color; // union_grps[cmbBx_grps_selected_index].Color;
 
-                Form1.note_template.Add(new Note_Template(current_note));
+                Form1.note_template.Add(new Note_Template(current_note));//(current_note.Date, current_note.Note, current_note.Header, current_note.Executor, current_note.Creation_Date, current_note.Status, current_note.Urgency, current_note.Group);/*(current_note));*/
                 Form1.ListBx_Stack_Of_Notes.Items.Refresh();
             }
-
+            Form1.XML_Serialization(Form1.note_template, strings_.Directory);
             this.Hide();
         }
 
