@@ -385,7 +385,8 @@
                                     <ListBox x:Name="ListBx_Stack_Of_Notes" 
                                              ItemsSource="{Binding}" 
                                              Background="Transparent" 
-                                             SelectionMode="Single">
+                                             SelectionMode="Single"
+                                             SelectionChanged="ListBx_Stack_Of_Notes_SelectionChanged">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <StackPanel Background="Transparent" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Orientation ="Horizontal">

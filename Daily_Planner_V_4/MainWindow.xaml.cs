@@ -18,10 +18,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Xml.Serialization;
 using System.Resources;
-using Microsoft.Bot.Builder.FormFlow.Advanced;
-
-//using System.Windows.Forms;
-
 
 namespace Daily_Planner_V_4
 {
@@ -78,15 +74,16 @@ namespace Daily_Planner_V_4
                 Group_Counter_Fills(note_template, my_Grps_Panel);
                 Group_Counter_Fills(note_template, delegated_Grps_Panel);
 
-                string day_and_month = DateTime.Today.ToString("MMM d", CultureInfo.CreateSpecificCulture(langCode));
+                string day_and_month = DateTime.Today.ToString("MMM d", CultureInfo.CreateSpecificCulture(langCode)) + ", " + DateTime.Today.ToString("ddd", CultureInfo.CreateSpecificCulture(langCode));
+                string month_ToUpper = "";
+                string date = day_and_month;
                 if (langCode == "ru-RU")
                 {
-                    //Microsoft.Bot.Builder.FormFlow.Advanced.ScriptG
-                    static string day_and_month_calme(day_and_month);
-                    day_and_month.Lang
+                    month_ToUpper = day_and_month.ToUpper();
+                    day_and_month.Replace(day_and_month[1], month_ToUpper[1]);
+                    date = month_ToUpper[0] + day_and_month.Substring(1);
                 }
-                //string day_and_month = DateTime.Today.ToString("MMM d")
-                //Today_Date_txtBx_of_Today_Notes_Btn.Text = DateTime.Today.ToString("MMM d ddd", CultureInfo.CreateSpecificCulture(langCode));
+                Today_Date_txtBx_of_Today_Notes_Btn.Text = date;
             }
         }
         public void Load_Default_Data()
@@ -492,6 +489,11 @@ namespace Daily_Planner_V_4
                 delete_grp_Wndw.Owner = this;
                 delete_grp_Wndw.Show();
             }
+        }
+
+        private void ListBx_Stack_Of_Notes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

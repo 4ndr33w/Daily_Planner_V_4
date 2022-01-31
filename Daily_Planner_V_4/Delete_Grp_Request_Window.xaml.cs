@@ -65,6 +65,7 @@ namespace Daily_Planner_V_4
             string save_path = strings_.Directory;
             Form1.XML_Serialization(union_temp_grp_data, save_path);
             Form1.XML_Serialization(temp_note_data, save_path);
+            Form1.Note_Counter_Fills();
             this.Hide();
         }
 

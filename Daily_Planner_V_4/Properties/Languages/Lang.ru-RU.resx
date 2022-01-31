@@ -366,6 +366,12 @@
   <data name="Today_Date" xml:space="preserve">
     <value>Сегодня:</value>
   </data>
+  <data name="Today_String" xml:space="preserve">
+    <value>Сегодня</value>
+  </data>
+  <data name="Tomorrow_String" xml:space="preserve">
+    <value>Завтра</value>
+  </data>
   <data name="Total_Notes_string" xml:space="preserve">
     <value>Всего Записей:</value>
   </data>

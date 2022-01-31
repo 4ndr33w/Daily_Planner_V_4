@@ -808,6 +808,24 @@ namespace Daily_Planner_V_4.Properties.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Today.
+        /// </summary>
+        public static string Today_String {
+            get {
+                return ResourceManager.GetString("Today_String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tomorow.
+        /// </summary>
+        public static string Tomorrow_String {
+            get {
+                return ResourceManager.GetString("Tomorrow_String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total Notes:   .
         /// </summary>
         public static string Total_Notes_string {
