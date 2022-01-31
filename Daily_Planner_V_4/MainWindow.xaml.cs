@@ -18,6 +18,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Xml.Serialization;
 using System.Resources;
+using Microsoft.Bot.Builder.FormFlow.Advanced;
+
 //using System.Windows.Forms;
 
 
@@ -29,6 +31,7 @@ namespace Daily_Planner_V_4
     public partial class MainWindow : Window
     {
         public StrDataRepository strings_ = new StrDataRepository();
+        Note_Counter_Fills counter_fills_class = new Note_Counter_Fills();
         public ObservableCollection<Group_Panel_Data> my_Grps_Panel = new ObservableCollection<Group_Panel_Data>();
         public ObservableCollection<Group_Panel_Data> delegated_Grps_Panel = new ObservableCollection<Group_Panel_Data>();
         public ObservableCollection<Group_of_Notes> union_Grps = new ObservableCollection<Group_of_Notes>();
@@ -46,6 +49,46 @@ namespace Daily_Planner_V_4
             InitializeComponent();
             Load_Default_Data();
         }
+        public void Hide_Btns_when_Selection_Changed()
+        {
+            foreach (var note in note_template)
+            {
+                note.Btn_Hide_Compl_or_Exp_note_Visibility = StrDataRepository.Visibility_hidden;
+                note.Delete_Btn_Visibility = StrDataRepository.Visibility_hidden;
+                note.Edit_Btn_Visibility = StrDataRepository.Visibility_hidden;
+                note.Mart_to_Complete_note_Visibility= StrDataRepository.Visibility_hidden;
+            }
+        }
+        public void Group_Counter_Fills(ObservableCollection<Note_Template> note_collection, ObservableCollection<Group_Panel_Data> grps_collection)
+        {
+            foreach (var grp in grps_collection)
+            {
+                grp.Filtered_notes_count = counter_fills_class.Group_Counter(note_collection, grp);
+            }
+        }
+        public void Note_Counter_Fills ()
+        {
+            if (TxtBx_All_Notes_Counter != null)
+            {
+                TxtBx_All_Notes_Counter.Text = note_template != null ? note_template.Count.ToString() : "0";
+                TxtBlck_Today_Notes_Counter.Text = note_template != null ? counter_fills_class.Today_Counter(note_template).ToString() : "0";
+                TxtBx_Expired_Notes_Counter.Text = expired_note_template != null ? expired_note_template.Count.ToString() : "0";
+                TxtBx_Completed_Notes_Counter.Text = completed_note_template != null ? completed_note_template.Count.ToString() : "0";
+
+                Group_Counter_Fills(note_template, my_Grps_Panel);
+                Group_Counter_Fills(note_template, delegated_Grps_Panel);
+
+                string day_and_month = DateTime.Today.ToString("MMM d", CultureInfo.CreateSpecificCulture(langCode));
+                if (langCode == "ru-RU")
+                {
+                    //Microsoft.Bot.Builder.FormFlow.Advanced.ScriptG
+                    static string day_and_month_calme(day_and_month);
+                    day_and_month.Lang
+                }
+                //string day_and_month = DateTime.Today.ToString("MMM d")
+                //Today_Date_txtBx_of_Today_Notes_Btn.Text = DateTime.Today.ToString("MMM d ddd", CultureInfo.CreateSpecificCulture(langCode));
+            }
+        }
         public void Load_Default_Data()
         {
             union_Grps = XML_Grps_Deserialization(StrDataRepository.directory);
@@ -54,6 +97,7 @@ namespace Daily_Planner_V_4
             ListBx_Grp_Of_My_Tasks.ItemsSource = my_Grps_Panel;
             ListBx_Grp_Of_Delegated_Tasks.ItemsSource = delegated_Grps_Panel;
             ListBx_Stack_Of_Notes.ItemsSource = note_template;
+            Note_Counter_Fills();
             ListBx_Stack_Of_Notes.Items.Refresh();
             ListBx_Grp_Of_My_Tasks.Items.Refresh();
             ListBx_Grp_Of_Delegated_Tasks.Items.Refresh();
@@ -78,31 +122,7 @@ namespace Daily_Planner_V_4
                 }
             }
         }
-        //public string Localization_return_source_value_Method(string localization_string)
-        //{
-        //    CompareInfo exec_compareInfo_en = new CultureInfo(langCode, false).CompareInfo;
-        //    SortKey sort_key_en = exec_compareInfo_en.GetSortKey(localization_string);
-        //    string[] trimmed_string = sort_key_en.ToString().Split(',');
-        //    string value = trimmed_string[2];
-        //    value = value.Substring(1);
-        //    return value; // value;
-        //}
-        //public int Localization_Compare_Method(string programFieldString, string localizationFieldString)
-        //{
-        //    CompareInfo exec_compareInfo_en = new CultureInfo(langCode, false).CompareInfo;
-        //    CompareInfo exec_compareInfo_ru = new CultureInfo("ru-RU", false).CompareInfo;
-
-        //    SortKey sort_key_en = exec_compareInfo_en.GetSortKey(Localization_return_source_value_Method(programFieldString)/*programFieldString*/);
-        //    SortKey sort_key_ru = exec_compareInfo_ru.GetSortKey(Localization_return_source_value_Method(localizationFieldString)/*localizationFieldString*/);
-
-
-        //    //Properties.Settings.Default.languageCode = "en-GB";
-        //    //string str = "";
-        //    //StringComparer.InvariantCultureIgnoreCase(Properties.Languages.Lang.Executor_string_Me)
-        //    //MessageBox.Show(Properties.Languages.Lang.Executor_string_Me) ;
-        //        //sort_key_en.ToString() + "   " +  sort_key_ru.ToString());
-        //    return SortKey.Compare(sort_key_en, sort_key_ru);
-        //}
+       
         public ObservableCollection<Group_of_Notes> Union_Grps_Method(ObservableCollection<Group_Panel_Data> my_grps, ObservableCollection<Group_Panel_Data> deleg_grps)
         {
             ObservableCollection<Group_of_Notes> temp_grps_coll = new ObservableCollection<Group_of_Notes>();
@@ -135,8 +155,6 @@ namespace Daily_Planner_V_4
         public int Find_Index_Of_Equal_Grp_In_Collection(Group_of_Notes note_Grp, ObservableCollection<Group_of_Notes> note_Grp_Collection)
         {
             int index = -1;
-            //try
-            //{
             for (int i = 0; i < note_Grp_Collection.Count; i++)
             {
                 if (note_Grp_Collection[i].Group_Name == note_Grp.Group_Name && note_Grp_Collection[i].Color == note_Grp.Color &&
@@ -246,10 +264,8 @@ namespace Daily_Planner_V_4
             List<Group_of_Notes> temp_notes_grps = new List<Group_of_Notes>();
             try
             {
-               
                 string grps_file_path = directory + StrDataRepository.grps_short_fileName;
                 string note_file_path = directory + StrDataRepository.note_short_fileName;
-                //MessageBox.Show(note_file_path);
                 if (File.Exists(grps_file_path))
                 {
                     XmlSerializer xml_serializer = new XmlSerializer(temp_grps.GetType());
@@ -269,7 +285,6 @@ namespace Daily_Planner_V_4
                     {
                         temp_notes_grps.Add(new Group_of_Notes(temp_notes[i].Group));
                     }
-
                     for (int i = 0; i < temp_notes_grps.Count; i++)
                     {
                         if (Find_Index_Of_Equal_Grp_In_Collection(temp_notes[i].Group, temp_grps) > -1)
@@ -374,100 +389,54 @@ namespace Daily_Planner_V_4
 
         private void ListBx_Grp_Of_My_Tasks_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //for (int i = 0; i < ListBx_Grp_Of_My_Tasks.Items.Count; i++)
-            //{
-            //    my_Grps_Panel[i].Delete_Grp_Btn_visibility = "Hidden";
-            //    (ListBx_Grp_Of_My_Tasks.Items[i] as Group_Panel_Data).Delete_Grp_Btn_visibility = "Hidden";
-            //}
-            //for (int i = 0; i < ListBx_Grp_Of_Delegated_Tasks.Items.Count; i++)
-            //{
-            //    delegated_Grps_Panel[i].Delete_Grp_Btn_visibility = "Hidden";
-            //    (ListBx_Grp_Of_Delegated_Tasks.Items[i] as Group_Panel_Data).Delete_Grp_Btn_visibility = "Hidden";
-            //}
-
-
-            //foreach (var grp in my_Grps_Panel)
-            //{
-            //    grp.Delete_Grp_Btn_visibility = "Hidden";
-            //}
-
-            //foreach (var grp in delegated_Grps_Panel)
-            //{
-            //    grp.Delete_Grp_Btn_visibility = "Hidden";
-            //}
-
-            //foreach (var element in ListBx_Grp_Of_My_Tasks.Items)
-            //{
-            //    (element as Group_Panel_Data).Delete_Grp_Btn_visibility = "Hidden";
-            //}
-            //foreach (var element in ListBx_Grp_Of_Delegated_Tasks.Items)
-            //{
-            //    (element as Group_Panel_Data).Delete_Grp_Btn_visibility = "Hidden";
-            //}
-            //ListBx_Grp_Of_My_Tasks.ItemsSource = my_Grps_Panel;
-            //if (ListBx_Grp_Of_My_Tasks.SelectedIndex > -1)
-            //{
-            //    (ListBx_Grp_Of_My_Tasks.SelectedItem as Group_Panel_Data).Delete_Grp_Btn_visibility = "Visible";
-            //    //my_Grps_Panel[ListBx_Grp_Of_My_Tasks.SelectedIndex].Delete_Grp_Btn_visibility = "Visible";
-            //}
+            
+            if (note_template != null)
+            {
+                int index = ListBx_Grp_Of_My_Tasks.SelectedIndex;
+                if (index > -1)
+                {
+                    ListBx_Stack_Of_Notes.ItemsSource = note_template.Where(find_grp_filter);
+                    ListBx_Stack_Of_Notes.Items.Refresh();
+                }
+            }
             ListBx_Grp_Of_Delegated_Tasks.SelectedIndex = -1;
-            ListBx_Grp_Of_My_Tasks.Items.Refresh();
-            ListBx_Grp_Of_Delegated_Tasks.Items.Refresh();
+            Hide_Btns_when_Selection_Changed();
         }
 
         private void ListBx_Grp_Of_Delegated_Tasks_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //for (int i = 0; i < ListBx_Grp_Of_My_Tasks.Items.Count; i++)
-            //{
-            //    my_Grps_Panel[i].Delete_Grp_Btn_visibility = "Hidden";
-            //    (ListBx_Grp_Of_My_Tasks.Items[i] as Group_Panel_Data).Delete_Grp_Btn_visibility = "Hidden";
-            //}
-            //for (int i = 0; i < ListBx_Grp_Of_Delegated_Tasks.Items.Count; i++)
-            //{
-            //    delegated_Grps_Panel[i].Delete_Grp_Btn_visibility = "Hidden";
-            //    (ListBx_Grp_Of_Delegated_Tasks.Items[i] as Group_Panel_Data).Delete_Grp_Btn_visibility = "Hidden";
-            //}
-            //for (int i = 0; i < my_Grps_Panel.Count; i++)
-            //{
-            //    //if (my_Grps_Panel[i] != ListBx_Grp_Of_My_Tasks.Items[ListBx_Grp_Of_My_Tasks.SelectedIndex])
-            //    //{
-            //    //    my_Grps_Panel[i].Delete_Grp_Btn_visibility = "Hidden";
-            //    //}
-            //    //my_Grps_Panel[i].Delete_Grp_Btn_visibility = my_Grps_Panel[i].Delete_Grp_Btn_visibility == "Hidden" ? "Hidden" : "Hidden";
-            //    //my_Grps_Panel[i].Delete_Grp_Btn_visibility = "Hidden";
-            //}
-            //for (int i = 0; i < delegated_Grps_Panel.Count; i++)
-            //{
-            //    delegated_Grps_Panel[i].Delete_Grp_Btn_visibility = "Hidden";
-            //}
-
-
-            //foreach (var grp in my_Grps_Panel)
-            //{
-            //    grp.Delete_Grp_Btn_visibility = "Hidden";
-            //}
-            //foreach (var grp in delegated_Grps_Panel)
-            //{
-            //    grp.Delete_Grp_Btn_visibility = "Hidden";
-            //}
-            //if (ListBx_Grp_Of_Delegated_Tasks.SelectedIndex > -1)
-            //{
-            //    (ListBx_Grp_Of_Delegated_Tasks.SelectedItem as Group_Panel_Data).Delete_Grp_Btn_visibility = "Visible";
-            //    //delegated_Grps_Panel[ListBx_Grp_Of_Delegated_Tasks.SelectedIndex].Delete_Grp_Btn_visibility = "Visible";
-            //}
-            //ListBx_Grp_Of_My_Tasks.SelectedIndex = -1;
-            ////if (ListBx_Grp_Of_My_Tasks.SelectedIndex < 0)
-            ////{
-            //    for (int i = 0; i < my_Grps_Panel.Count; i++)
-            //    {
-            //    (ListBx_Grp_Of_My_Tasks.Items[i] as Group_Panel_Data).Delete_Grp_Btn_visibility = "Hidden";
-            //    //my_Grps_Panel[i].Delete_Grp_Btn_visibility = "Hidden";
-            //    }
-            //}
+            
+            if (note_template != null)
+            {
+                int index = ListBx_Grp_Of_Delegated_Tasks.SelectedIndex;
+                if (index > -1)
+                {
+                    ListBx_Stack_Of_Notes.ItemsSource = note_template.Where(find_grp_filter);
+                    ListBx_Stack_Of_Notes.Items.Refresh();
+                }
+            }
             ListBx_Grp_Of_My_Tasks.SelectedIndex = -1;
-            ListBx_Grp_Of_Delegated_Tasks.Items.Refresh();
-            ListBx_Grp_Of_My_Tasks.Items.Refresh();
+            Hide_Btns_when_Selection_Changed();
         }
+        private bool find_grp_filter(Note_Template arg)
+        {
+            bool result = false;
+            if (arg.Group != null && ListBx_Grp_Of_My_Tasks.SelectedItem != null)
+            {
+                if (arg.Group.Grp_equals(ListBx_Grp_Of_My_Tasks.SelectedItem as Group_of_Notes)) result = true;
+                else result = false;
+            }
+            if (arg != null && ListBx_Grp_Of_Delegated_Tasks.SelectedItem != null)
+            {
+                if ((ListBx_Grp_Of_Delegated_Tasks.SelectedItem as Group_of_Notes).Grp_equals(arg.Group))
+                {
+                    result = true;
+                }
+                else result = false;
+            } 
+            return result;
+        }
+
 
         private void ListBx_Grp_Of_My_Tasks_Unselected(object sender, RoutedEventArgs e)
         {
@@ -476,27 +445,12 @@ namespace Daily_Planner_V_4
 
         private void Btn_Show_Today_Notes_Click(object sender, RoutedEventArgs e)
         {
-            //for (int i = 0; i < ListBx_Grp_Of_My_Tasks.Items.Count; i++)
-            //{
-            //    my_Grps_Panel[i].Delete_Grp_Btn_visibility = "Hidden";
-            //    (ListBx_Grp_Of_My_Tasks.Items[i] as Group_Panel_Data).Delete_Grp_Btn_visibility = "Hidden";
-            //}
-            //for (int i = 0; i < ListBx_Grp_Of_Delegated_Tasks.Items.Count; i++)
-            //{
-            //    delegated_Grps_Panel[i].Delete_Grp_Btn_visibility = "Hidden";
-            //    (ListBx_Grp_Of_Delegated_Tasks.Items[i] as Group_Panel_Data).Delete_Grp_Btn_visibility = "Hidden";
-            //}
-            //if (ListBx_Grp_Of_My_Tasks.SelectedItem != null)
-            //{
-            //    my_Grps_Panel[ListBx_Grp_Of_My_Tasks.SelectedIndex].Delete_Grp_Btn_visibility = "Hidden";
-            //    ListBx_Grp_Of_My_Tasks.ItemsSource = my_Grps_Panel;
-            //    //(ListBx_Grp_Of_My_Tasks.SelectedItem as Group_Panel_Data).Delete_Grp_Btn_visibility = "Hidden";
-            //}
-            //if (ListBx_Grp_Of_Delegated_Tasks.SelectedItem != null)
-            //{
-            //    (ListBx_Grp_Of_Delegated_Tasks.SelectedItem as Group_Panel_Data).Delete_Grp_Btn_visibility = "Hidden";
-            //    delegated_Grps_Panel[ListBx_Grp_Of_Delegated_Tasks.SelectedIndex].Delete_Grp_Btn_visibility = "Hidden";
-            //}
+            if (note_template != null)
+            {
+                ListBx_Stack_Of_Notes.ItemsSource = note_template.Where(a => a.Date.ToShortDateString() == DateTime.Today.ToShortDateString());
+            }
+
+            Hide_Btns_when_Selection_Changed();
             ListBx_Grp_Of_Delegated_Tasks.SelectedIndex = -1;
             ListBx_Grp_Of_My_Tasks.SelectedIndex = -1;
             ListBx_Grp_Of_My_Tasks.Items.Refresh();
@@ -505,22 +459,17 @@ namespace Daily_Planner_V_4
 
         private void Btn_Show_All_Notes_Click(object sender, RoutedEventArgs e)
         {
-            //for (int i = 0; i < ListBx_Grp_Of_My_Tasks.Items.Count; i++)
-            //{
-            //    my_Grps_Panel[i].Delete_Grp_Btn_visibility = "Hidden";
-            //    (ListBx_Grp_Of_My_Tasks.Items[i] as Group_Panel_Data).Delete_Grp_Btn_visibility = "Hidden";
-            //}
-            //for (int i = 0; i < ListBx_Grp_Of_Delegated_Tasks.Items.Count; i++)
-            //{
-            //    delegated_Grps_Panel[i].Delete_Grp_Btn_visibility = "Hidden";
-            //    (ListBx_Grp_Of_Delegated_Tasks.Items[i] as Group_Panel_Data).Delete_Grp_Btn_visibility = "Hidden";
-            //}
+            if (note_template != null)
+            {
+                ListBx_Stack_Of_Notes.ItemsSource = note_template;
+            }
+            
             ListBx_Grp_Of_Delegated_Tasks.SelectedIndex = -1;
             ListBx_Grp_Of_My_Tasks.SelectedIndex = -1;
             ListBx_Grp_Of_My_Tasks.Items.Refresh();
             ListBx_Grp_Of_Delegated_Tasks.Items.Refresh();
         }
-
+       
         private void Btn_my_task_group_delete_group_Click(object sender, RoutedEventArgs e)
         {
             if (ListBx_Grp_Of_My_Tasks.SelectedItem != null)
@@ -543,8 +492,6 @@ namespace Daily_Planner_V_4
                 delete_grp_Wndw.Owner = this;
                 delete_grp_Wndw.Show();
             }
-            //if ((sender as ComboBoxItem).IsFocused == true && (sender as ComboBoxItem) != ListBx_Grp_Of_Delegated_Tasks.SelectedItem && ListBx_Grp_Of_Delegated_Tasks.SelectedItem != null)
-            //{ return; }
         }
     }
 }
