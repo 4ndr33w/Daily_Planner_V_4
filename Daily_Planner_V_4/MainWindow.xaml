@@ -428,7 +428,7 @@
                                                                                 Margin="0" 
                                                                                 HorizontalAlignment="Stretch" 
                                                                                 VerticalAlignment="Stretch">
-                                                                            <TextBlock Text="Hide_Note_Btn" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                            <TextBlock Text="{x:Static language:Lang.Hide_Note_Btn}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                                         </Border>
                                                                     </Button>
 
@@ -450,7 +450,7 @@
                                                                                 Opacity="55"
                                                                                 Background="Transparent"
                                                                                   HorizontalAlignment="Right">
-                                                                            <TextBlock Text="Complete_Task_Btn" Padding="3,3,3,3" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                                                                            <TextBlock Text="{x:Static language:Lang.Complete_Task_Btn}" Padding="3,3,3,3" TextWrapping="Wrap" HorizontalAlignment="Center"/>
                                                                         </Button>
                                                                     </StackPanel>
                                                                 </DockPanel>
@@ -470,14 +470,15 @@
                                                         </StackPanel>
                                                     </Border>
                                                     <Button x:Name="Btn_edit_note" 
-                                                            Content="Edit_Note_Btn" 
+                                                            Content="{x:Static language:Lang.Edit_Note_Btn}" 
                                                             Visibility="{Binding Edit_Btn_Visibility}"
                                                             Style="{StaticResource Style_Note_Window_Btn_edit_delete}"/>
 
                                                     <Button x:Name="Btn_Delete_note" 
-                                                            Content="Delete_Note_Btn" 
+                                                            Content="{x:Static language:Lang.Delete_Note_Btn}" 
                                                             Style="{StaticResource Style_Note_Window_Btn_edit_delete}"
-                                                            Visibility="{Binding Delete_Btn_Visibility}"/>
+                                                            Visibility="{Binding Delete_Btn_Visibility}"
+                                                            Click="Btn_Delete_note_Click"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>

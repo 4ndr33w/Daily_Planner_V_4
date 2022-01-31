@@ -63,7 +63,7 @@ namespace Daily_Planner_V_4
                 grp.Filtered_notes_count = counter_fills_class.Group_Counter(note_collection, grp);
             }
         }
-        public void Note_Counter_Fills ()
+        public void All_Counter_Fills ()
         {
             if (TxtBx_All_Notes_Counter != null)
             {
@@ -95,7 +95,7 @@ namespace Daily_Planner_V_4
             ListBx_Grp_Of_My_Tasks.ItemsSource = my_Grps_Panel;
             ListBx_Grp_Of_Delegated_Tasks.ItemsSource = delegated_Grps_Panel;
             ListBx_Stack_Of_Notes.ItemsSource = note_template;
-            Note_Counter_Fills();
+            All_Counter_Fills();
             ListBx_Stack_Of_Notes.Items.Refresh();
             ListBx_Grp_Of_My_Tasks.Items.Refresh();
             ListBx_Grp_Of_Delegated_Tasks.Items.Refresh();
@@ -416,7 +416,7 @@ namespace Daily_Planner_V_4
             ListBx_Grp_Of_My_Tasks.SelectedIndex = -1;
             Hide_Btns_when_Selection_Changed();
         }
-        private bool find_grp_filter(Note_Template arg)
+        public bool find_grp_filter(Note_Template arg)
         {
             bool result = false;
             if (arg.Group != null && ListBx_Grp_Of_My_Tasks.SelectedItem != null)
@@ -531,6 +531,16 @@ namespace Daily_Planner_V_4
                 completed_note_template[ListBx_Stack_Of_Notes.SelectedIndex].Delete_Btn_Visibility = StrDataRepository.Visibility_hidden;
             }
             ListBx_Stack_Of_Notes.Items.Refresh();
+        }
+
+        private void Btn_Delete_note_Click(object sender, RoutedEventArgs e)
+        {
+            if (ListBx_Stack_Of_Notes.SelectedItem != null)
+            {
+                Delete_Note_Request_Window delete_note_Wndw = new Delete_Note_Request_Window();
+                delete_note_Wndw.Owner = this;
+                delete_note_Wndw.Show();
+            }
         }
     }
 }

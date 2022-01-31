@@ -97,7 +97,7 @@ namespace Daily_Planner_V_4
                 Form1.ListBx_Stack_Of_Notes.Items.Refresh();
             }
             Form1.XML_Serialization(Form1.note_template, strings_.Directory);
-            Form1.Note_Counter_Fills();
+            Form1.All_Counter_Fills();
             this.Hide();
         }
 

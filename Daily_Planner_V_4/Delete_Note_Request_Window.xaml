@@ -5,8 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Daily_Planner_V_4"
         mc:Ignorable="d"
-        Title="Delete_Note_Request_Window" Height="450" Width="800">
+       xmlns:language ="clr-namespace:Daily_Planner_V_4.Properties.Languages"
+        WindowStartupLocation="CenterOwner"
+        Title="" MaxHeight="120" MaxWidth="200" MinHeight="120" MinWidth="200" Padding="10,10,10,10">
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF1D1D1D"/>
+            <GradientStop Color="#FF424242" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
     <Grid>
-        
+        <StackPanel>
+            <TextBlock Text="{x:Static language:Lang.Delete_Note_Request}" Foreground="White" HorizontalAlignment="Center" Margin="10,15,10,0"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="Btn_Cancel" Content="{x:Static language:Lang.Cancel_Btn}" Background="Transparent" Foreground="White" Margin="0,15,10,30" Padding="5" Click="Btn_Cancel_Click"/>
+                <Button x:Name="Btn_OK" Content="{x:Static language:Lang.OK_Btn}" Background="Transparent" Foreground="White" Margin="10,15,0,30" Padding="10,5,10,5" Click="Btn_OK_Click"/>
+            </StackPanel>
+        </StackPanel>
+
     </Grid>
 </Window>
