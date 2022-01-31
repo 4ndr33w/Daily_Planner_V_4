@@ -58,7 +58,29 @@ namespace Daily_Planner_V_4
                 return time;
             }
         }
+        public Note_Template()
+        {
+            _date = DateTime.Now;
+            _note = String.Empty;
+            _header = Properties.Languages.Lang.Note_Default_Header;
+            _executor = Properties.Languages.Lang.Executor_string_Me;
+            _creation_date = DateTime.Now;
+            _status = false;
+            _urgency = false;
+            _group = _default_group;
+            _color = _group.Color;
 
+            _urgent_or_expire_or_complete_title = string.Empty;
+            _delete_btn_visibility = StrDataRepository.Visibility_hidden;
+            _edit_btn_visibility = StrDataRepository.Visibility_hidden;
+            _foreground = Colors.Black.ToString();
+            _expired_foreground = Colors.White.ToString();
+            _btn_hide_completed_or_expired_note_visibility = StrDataRepository.Visibility_hidden;
+            _mark_to_complete_note_visibility = StrDataRepository.Visibility_hidden;
+            _expired = "";
+
+
+        }
         public Note_Template(Note_Template note) : base()
         {
             _date = note.Date;

@@ -27,6 +27,7 @@ namespace Daily_Planner_V_4
     public partial class MainWindow : Window
     {
         public StrDataRepository strings_ = new StrDataRepository();
+        public Note_Template current_note_template = new Note_Template();
         Note_Counter_Fills counter_fills_class = new Note_Counter_Fills();
         public ObservableCollection<Group_Panel_Data> my_Grps_Panel = new ObservableCollection<Group_Panel_Data>();
         public ObservableCollection<Group_Panel_Data> delegated_Grps_Panel = new ObservableCollection<Group_Panel_Data>();
@@ -493,7 +494,43 @@ namespace Daily_Planner_V_4
 
         private void ListBx_Stack_Of_Notes_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (ListBx_Stack_Of_Notes.SelectedItem != null && ListBx_Stack_Of_Notes.ItemsSource != expired_note_template && ListBx_Stack_Of_Notes.ItemsSource != completed_note_template && note_template != null)
+            {
+                current_note_template = ListBx_Stack_Of_Notes.SelectedItem as Note_Template;
+                //Hide_Btns_when_Selection_Changed();
+                foreach (var note in note_template)
+                {
+                    note.Btn_Hide_Compl_or_Exp_note_Visibility = StrDataRepository.Visibility_hidden;
+                    note.Delete_Btn_Visibility = StrDataRepository.Visibility_hidden;
+                    note.Edit_Btn_Visibility = StrDataRepository.Visibility_hidden;
+                    note.Mart_to_Complete_note_Visibility = StrDataRepository.Visibility_hidden;
 
+                    if (note.Creation_Date == current_note_template.Creation_Date)
+                    {
+                        note.Delete_Btn_Visibility = StrDataRepository.Visibility_visible;
+                        note.Edit_Btn_Visibility = StrDataRepository.Visibility_visible;
+                        note.Mart_to_Complete_note_Visibility = StrDataRepository.Visibility_visible;
+                        if (note.Expired == Properties.Languages.Lang.Expired_string || note.Expired == Properties.Languages.Lang.Completed_Note_String)
+                        {
+                            note.Btn_Hide_Compl_or_Exp_note_Visibility = StrDataRepository.Visibility_visible;
+                            note.Mart_to_Complete_note_Visibility = StrDataRepository.Visibility_hidden;
+                        }
+                    }
+                }
+            }
+            if (ListBx_Stack_Of_Notes.ItemsSource == expired_note_template && expired_note_template != null)
+            {
+                Hide_Btns_when_Selection_Changed();
+                if (ListBx_Stack_Of_Notes.SelectedItem != null)
+                {
+                    expired_note_template[ListBx_Stack_Of_Notes.SelectedIndex].Delete_Btn_Visibility = StrDataRepository.Visibility_hidden;
+                }
+            }
+            if (ListBx_Stack_Of_Notes.ItemsSource == completed_note_template && completed_note_template != null)
+            {
+                completed_note_template[ListBx_Stack_Of_Notes.SelectedIndex].Delete_Btn_Visibility = StrDataRepository.Visibility_hidden;
+            }
+            ListBx_Stack_Of_Notes.Items.Refresh();
         }
     }
 }
