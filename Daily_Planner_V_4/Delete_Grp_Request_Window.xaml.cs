@@ -46,9 +46,6 @@ namespace Daily_Planner_V_4
                 Delete_Grp_Method(selected_grp, my_temp_grp_panel, temp_note_data);
                 Form1.note_template = temp_note_data;
                 Form1.my_Grps_Panel = my_temp_grp_panel;
-
-                //Form1.note_template = temp_note_data;
-                
             }
             if (Form1.ListBx_Grp_Of_Delegated_Tasks.SelectedItem != null)
             {
@@ -57,12 +54,10 @@ namespace Daily_Planner_V_4
                 Delete_Grp_Method(selected_grp, deleg_temp_grp_panel, temp_note_data);
                 Form1.note_template = temp_note_data;
                 Form1.delegated_Grps_Panel = deleg_temp_grp_panel;
-
             }
+            Form1.ListBx_Stack_Of_Notes.ItemsSource = temp_note_data;
             Form1.ListBx_Stack_Of_Notes.Items.Refresh();
-            //my_temp_grp_data = Grps_Collection_Convert_to_Serialize(Form1.my_Grps_Panel);
-            //deleg_temp_grp_data = Grps_Collection_Convert_to_Serialize(Form1.delegated_Grps_Panel);
-           
+
             union_temp_grp_data = Form1.Union_Grps_Method(my_temp_grp_panel, deleg_temp_grp_panel);
 
             string save_path = strings_.Directory;
@@ -109,13 +104,6 @@ namespace Daily_Planner_V_4
                     note_collection.RemoveAt(i);
                 }
             }
-            //foreach (var note in note_collection)
-            //{
-            //    if (note.Group == selected_grp)
-            //    {
-            //        note_collection.Remove(note);
-            //    }
-            //}
         } 
     }
 }

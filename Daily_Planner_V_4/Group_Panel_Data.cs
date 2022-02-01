@@ -40,9 +40,9 @@ namespace Daily_Planner_V_4
         }
         public Group_Panel_Data(string color, string grp_name, string executor) : base(color, grp_name, executor)
         {
-            _color = color ?? Colors.Salmon.ToString(); // : color;
-            _group_name = grp_name ?? Properties.Languages.Lang.Default_string; // : grp_name;
-            _execution_of = executor ?? Properties.Languages.Lang.Executor_string_Me; // : executor;
+            _color = color ?? _color;
+            _group_name = grp_name ??  _group_name;
+            _execution_of = executor ?? _execution_of;
         }
 
         public Group_Panel_Data(string color, string group_name, string executor, int note_counter, string del_btn_visib) : base(color, group_name, executor)

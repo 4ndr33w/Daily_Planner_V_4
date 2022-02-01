@@ -192,6 +192,9 @@
   <data name="Days_Wednesday" xml:space="preserve">
     <value>Wednesday</value>
   </data>
+  <data name="Default_Group_Name" xml:space="preserve">
+    <value>Different</value>
+  </data>
   <data name="Default_string" xml:space="preserve">
     <value>Default</value>
   </data>

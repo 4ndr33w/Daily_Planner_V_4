@@ -286,6 +286,15 @@ namespace Daily_Planner_V_4.Properties.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Different.
+        /// </summary>
+        public static string Default_Group_Name {
+            get {
+                return ResourceManager.GetString("Default_Group_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Default.
         /// </summary>
         public static string Default_string {

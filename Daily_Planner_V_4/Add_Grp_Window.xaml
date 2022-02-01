@@ -31,8 +31,8 @@
                     Text="{x:Static language:Lang.Add_Grp_Wndw__Choose_Color}" 
                     HorizontalAlignment="Center"/>
                 <StackPanel Orientation="Horizontal">
-                    <Button x:Name="Color_Dark_Red_Button" BorderThickness="1" BorderBrush="Black" Background="DarkRed" Width="10" Height="10" Margin="5,5,5,5" Click="Color_Dark_Red_Button_Click"/>
-                    <Button x:Name="Color_Red_Button" BorderThickness="1" BorderBrush="Black" Background="#FFDE0404" Width="10" Height="10" Margin="0,5,5,5" Click="Color_Red_Button_Click"/>
+                    <Button x:Name="Color_Dark_Red_Button" BorderThickness="1" BorderBrush="Black" Background="#FFDE0404" Width="10" Height="10" Margin="5,5,5,5" Click="Color_Dark_Red_Button_Click"/>
+                    <Button x:Name="Color_Red_Button" BorderThickness="1" BorderBrush="Black" Background="#FFFF3535" Width="10" Height="10" Margin="0,5,5,5" Click="Color_Red_Button_Click"/>
                     <Button x:Name="Color_Medium_Red_Button" BorderThickness="1" BorderBrush="Black" Background="#FFF75F7B" Width="10" Height="10" Margin="0,5,5,5" Click="Color_Medium_Red_Button_Click"/>
                     <Button x:Name="Color_Lighr_Red_Button" BorderThickness="1" BorderBrush="Black" Background="#FFD288A1" Width="10" Height="10" Margin="0,5,5,5" Click="Color_Lighr_Red_Button_Click"/>
                 </StackPanel>
@@ -51,8 +51,9 @@
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="Color_Dark_Green_Button" BorderThickness="1" BorderBrush="Black" Background="DarkGreen" Width="10" Height="10" Margin="5,0,5,5" Click="Color_Dark_Green_Button_Click"/>
                     <Button x:Name="Color_Green_Button" BorderThickness="1" BorderBrush="Black" Background="#FF059C05" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Green_Button_Click"/>
-                    <Button x:Name="Color_Medium_Green_Button" BorderThickness="1" BorderBrush="Black" Background="LawnGreen" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Medium_Green_Button_Click"/>
-                    <Button x:Name="Color_Light_Green_Button" BorderThickness="1" BorderBrush="Black" Background="#FF9EEF9E" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Light_Green_Button_Click"/>
+                    <Button x:Name="Color_Medium_Green_Button" BorderThickness="1" BorderBrush="Black" Background="LimeGreen" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Medium_Green_Button_Click"/>
+                    <Button x:Name="Color_Light_Green_Button" BorderThickness="1" BorderBrush="Black" Background="LawnGreen" Width="10" Height="10" Margin="0,0,5,5" Click="Color_Light_Green_Button_Click"/>
+                    <!--FF9EEF9E-->
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="Color_Dark_Blue_Button" BorderThickness="1" BorderBrush="Black" Background="DarkBlue" Width="10" Height="10" Margin="5,0,5,5" Click="Color_Dark_Blue_Button_Click"/>

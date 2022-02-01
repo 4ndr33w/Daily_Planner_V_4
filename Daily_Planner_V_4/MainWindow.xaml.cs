@@ -287,17 +287,8 @@ namespace Daily_Planner_V_4
                     {
                         for (int j = 0; j < temp_notes_grps.Count; j++)
                         {
-                            if (temp_grps[i].Grp_equals(temp_notes_grps[j]))
-                            {
-                                temp_notes_grps.RemoveAt(j);
-                            }
+                            if (temp_grps[i].Grp_equals(temp_notes_grps[j]))        temp_notes_grps.RemoveAt(j);
                         }
-                        //if (Find_Index_Of_Equal_Grp_In_Collection(temp_notes[i].Group, temp_grps) > -1)
-                        //{
-                        //    temp_notes_grps.RemoveAt(i);
-                        //}
-                        //else temp_grps.Add(new Group_of_Notes(temp_notes_grps[i]));
-                        //return temp_grps;
                     }
                     foreach (var grp in temp_notes_grps)
                     {
@@ -487,10 +478,6 @@ namespace Daily_Planner_V_4
                 delete_grp_Wndw.Owner = this;
                 delete_grp_Wndw.Show();
             }
-            //if (ListBx_Grp_Of_My_Tasks.SelectedItem != (sender as ComboBox).Items.CurrentItem) return;
-            //if ((sender as ComboBoxItem).IsFocused == true && (sender as ComboBoxItem) != ListBx_Grp_Of_My_Tasks.SelectedItem && ListBx_Grp_Of_My_Tasks.SelectedItem != null)
-            //{ return; }
-
         }
 
         private void Btn_delegated_task_group_delete_group_Click(object sender, RoutedEventArgs e)

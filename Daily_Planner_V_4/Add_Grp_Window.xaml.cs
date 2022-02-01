@@ -44,8 +44,8 @@ namespace Daily_Planner_V_4
         {
             MainWindow Form1 = this.Owner as MainWindow;
 
-            _color = Chosen_Color_Indicator.Background.ToString() == Colors.Transparent.ToString() ? Colors.Salmon.ToString() : Chosen_Color_Indicator.Background.ToString();
-            _grp_name = Note_Group_Name_TextBox.Text == String.Empty ? Properties.Languages.Lang.Default_string : Note_Group_Name_TextBox.Text;
+            _color = Chosen_Color_Indicator.Background.ToString() == Colors.Transparent.ToString() ? /*Colors.LawnGreen.ToString()*/ grp.Color : Chosen_Color_Indicator.Background.ToString();
+            _grp_name = Note_Group_Name_TextBox.Text == String.Empty ? /*Properties.Languages.Lang.Default_string*/ grp.Group_Name : Note_Group_Name_TextBox.Text;
             this.grp.Color = _color; // Chosen_Color_Indicator.Background == null ? Colors.Salmon.ToString() : Chosen_Color_Indicator.Background.ToString();
             this.grp.Group_Name = _grp_name; // Note_Group_Name_TextBox.Text == String.Empty ? Properties.Languages.Lang.Default_string : Note_Group_Name_TextBox.Text;
 
