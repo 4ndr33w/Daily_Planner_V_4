@@ -35,11 +35,12 @@ namespace Daily_Planner_V_4
 
         Note_Data current_note = new Note_Data();
         Group_of_Notes current_grp = new Group_of_Notes();
+        Group_of_Notes default_grp = new Group_of_Notes();
         public Add_Note_Window()
         {
             InitializeComponent();
             loas_defaults();
-            time_picker_source = time_picker_range.Choose_Time_Range(Properties.Languages.Lang.note_time_range_1_hour); //time_picker_1h_range;
+            time_picker_source = time_picker_range.Choose_Time_Range(Properties.Languages.Lang.note_time_range_1_hour);
             time_picker.Items.Clear();
             time_picker.ItemsSource = time_picker_source;
         }
@@ -59,7 +60,6 @@ namespace Daily_Planner_V_4
             union_grps = Form1.Union_Grps_Method(Form1.my_Grps_Panel, Form1.delegated_Grps_Panel);
             CmbBox_Task_Groups.ItemsSource = union_grps;
 
-
             //MainWindow Form1 = new MainWindow();
             //Form1 = Owner as MainWindow;
             //union_grps = Form1.Union_Grps_Method(Form1.my_Grps_Panel, Form1.delegated_Grps_Panel);
@@ -78,9 +78,9 @@ namespace Daily_Planner_V_4
             if (date_picker.Text == String.Empty) { date_picker.Text = DateTime.Now.ToShortDateString(); }
             else if (time_picker.Text == String.Empty) { time_picker.Text = DateTime.Now.ToShortTimeString(); }
 
-            int cmbBx_grps_selected_index = CmbBox_Task_Groups.SelectedIndex > -1 ? SelectedInCmboBx_Group_Index(union_grps, CmbBox_Task_Groups) : -1; // = CmbBox_Task_Groups.SelectedIndex; // > -1 ? CmbBox_Task_Groups.SelectedIndex : -1; // = SelectedInCmboBx_Group_Index(union_grps, CmbBox_Task_Groups);
+            int cmbBx_grps_selected_index = CmbBox_Task_Groups.SelectedIndex > -1 ? SelectedInCmboBx_Group_Index(union_grps, CmbBox_Task_Groups) : -1;
 
-            if (Form1.create_new_note == true/*strings_.CreateOrEditNote_Mode == "create"*/)
+            if (Form1.create_new_note == true)
             {
                 current_note.Header = (txtBx_Header_name.Text != String.Empty || txtBx_Header_name.Text != Properties.Languages.Lang.Enter_Header_string) ? txtBx_Header_name.Text : Properties.Languages.Lang.Note_Default_Header;
                 current_note.Executor = (txtBx_Executor.Text != String.Empty || txtBx_Executor.Text != Properties.Languages.Lang.new_note_executor_empty_string) ? txtBx_Executor.Text : Properties.Languages.Lang.Executor_string_Me;
@@ -89,15 +89,34 @@ namespace Daily_Planner_V_4
                 current_note.Urgency = chkBx_Urgency.IsChecked == true ? true : false;
                 current_note.Note = (new TextRange(txtBx_Note_TextBox.Document.ContentStart, txtBx_Note_TextBox.Document.ContentEnd)).Text;
 
-                //current_grp = cmbBx_grps_selected_index > -1 ? union_grps[cmbBx_grps_selected_index] : current_grp;
-                current_note.Group = current_grp; // cmbBx_grps_selected_index > -1 ? union_grps[cmbBx_grps_selected_index] : current_grp;
-                current_note.Color = current_grp.Color; // union_grps[cmbBx_grps_selected_index].Color;
+                current_note.Group = current_grp;
+                current_note.Color = current_grp.Color;
 
-                Form1.note_template.Add(new Note_Template(current_note));//(current_note.Date, current_note.Note, current_note.Header, current_note.Executor, current_note.Creation_Date, current_note.Status, current_note.Urgency, current_note.Group);/*(current_note));*/
+                Form1.note_template.Add(new Note_Template(current_note));
                 Form1.ListBx_Stack_Of_Notes.Items.Refresh();
+                if (CmbBox_Task_Groups.SelectedItem == null)
+                {
+                    foreach (var grp in Form1.my_Grps_Panel.ToArray())
+                    {
+                        if (!grp.Grp_equals(default_grp))
+                        {
+                            Form1.my_Grps_Panel.Add(new Group_Panel_Data(default_grp));
+                        }
+                    }
+                }
             }
-            Form1.XML_Serialization(Form1.note_template, strings_.Directory);
-            Form1.All_Counter_Fills();
+
+            // при добавлении заметки с дефолтной группой (не выбранной группой в комбобоксе) не происходит добавление дефолтной группы в список
+            // не удалось корректно решить вопрос с добавлением дефолтной группы из тела самой заметки - группа дублируется.. хз почему
+            // по этому было принято решение сбросить ObservableCollection и загрузить все с сейва - тогда все группы подгружаются корректно,
+            // включая дефолтную группу из вновь созданной заметки
+            {
+                Form1.my_Grps_Panel.Clear();
+                Form1.delegated_Grps_Panel.Clear();
+                Form1.note_template.Clear();
+                Form1.Load_Default_Data();
+            }
+            //Form1.All_Counter_Fills();
             this.Hide();
         }
 

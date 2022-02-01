@@ -52,9 +52,10 @@ namespace Daily_Planner_V_4
             }
             else
             {
-                if (Form1.ListBx_Stack_Of_Notes.Items != null && (Form1.ListBx_Grp_Of_My_Tasks.SelectedItem != null || Form1.ListBx_Grp_Of_Delegated_Tasks.SelectedItem != null))
+                if (Form1.ListBx_Stack_Of_Notes.Items != null/* && (Form1.ListBx_Grp_Of_My_Tasks.SelectedItem != null || Form1.ListBx_Grp_Of_Delegated_Tasks.SelectedItem != null)*/)
                 {
-                    Delete_Note_Method(Form1.note_template.Where(Form1.find_grp_filter) as ObservableCollection<Note_Template>, Form1.ListBx_Stack_Of_Notes, StrDataRepository.directory);
+                    Delete_Note_Method(Form1.note_template/*.Where(Form1.find_grp_filter) as ObservableCollection<Note_Template>*/, Form1.ListBx_Stack_Of_Notes, StrDataRepository.directory);
+                    Form1.ListBx_Stack_Of_Notes.Items.Refresh();
                 }
                 //if (Form1.ListBx_Stack_Of_Notes.Items != null && Form1.ListBx_Grp_Of_Delegated_Tasks.SelectedItem != null)
                 //{
@@ -71,47 +72,68 @@ namespace Daily_Planner_V_4
             int note_index_in_collection = -1;
 
             //выполняется в случае когда отображение Note в ListBox'e не сортируется по группам... 
-            if (Form1.ListBx_Stack_Of_Notes.ItemsSource == Form1.expired_note_template || Form1.ListBx_Stack_Of_Notes.ItemsSource == Form1.completed_note_template || Form1.ListBx_Stack_Of_Notes.ItemsSource == Form1.note_template)
+            //if (Form1.ListBx_Stack_Of_Notes.ItemsSource == Form1.expired_note_template || Form1.ListBx_Stack_Of_Notes.ItemsSource == Form1.completed_note_template || Form1.ListBx_Stack_Of_Notes.ItemsSource == Form1.note_template)
+           // {
+           if (listBx.SelectedItem != null)
             {
-                if (note_collection != null)
+                if (note_collection != null && listBx.Items != null)
                 {
-                    for (int i = 0; i < note_collection.Count; i++)
+                    foreach (var note in note_collection.ToArray())
                     {
-                        if (one_note.Creation_Date == note_collection[i].Creation_Date)
+                        if (one_note.Creation_Date == note.Creation_Date)
                         {
-                            note_index_in_collection = i;
+                            note_collection.Remove(one_note);
                         }
                     }
-                    note_collection.RemoveAt(note_index_in_collection);
                 }
-                
-            }
-            //выполняется в случае, когда отображение заметок фильтуется по группам
-            else
-            {
-                if (note_collection != null)
-                {
-                    note_collection = Form1.note_template;
-                    for (int i = 0; i < listBx.Items.Count; i++)
-                    {
-                        converted_from_listBox_collection.Add(new Note_Template(listBx.Items[i] as Note_Template));
-                    }
-                    if (converted_from_listBox_collection != null)
-                    {
-                        for (int i = 0; i < note_collection.Count; i++)
-                        {
-                            if (one_note.Creation_Date == note_collection[i].Creation_Date)
-                            {
-                                note_index_in_collection = i;
-                            }
-                        }
-                    }
-                    note_collection.RemoveAt(note_index_in_collection);
-                    Form1.ListBx_Stack_Of_Notes.ItemsSource = converted_from_listBox_collection;
-                }
-               
-            }
+              
 
+
+                //    for (int i = 0; i < note_collection.Count; i++)
+                //{
+                //    if (one_note.Creation_Date == note_collection[i].Creation_Date)
+                //    {
+                //        //note_index_in_collection = i;
+                //        note_collection.Remove(one_note);
+                //    }
+                //}
+
+            }
+            Form1.ListBx_Stack_Of_Notes.ItemsSource = note_collection;
+
+            if (Form1.ListBx_Stack_Of_Notes.ItemsSource == Form1.expired_note_template) { Form1.expired_note_template = note_collection; }
+            if (Form1.ListBx_Stack_Of_Notes.ItemsSource == Form1.completed_note_template) { Form1.completed_note_template = note_collection; }
+            else Form1.ListBx_Stack_Of_Notes.ItemsSource = Form1.note_template;
+
+            //}
+            //выполняется в случае, когда отображение заметок фильтуется по группам
+            //if (Form1.ListBx_Stack_Of_Notes.ItemsSource != Form1.expired_note_template && Form1.ListBx_Stack_Of_Notes.ItemsSource != Form1.completed_note_template && Form1.ListBx_Stack_Of_Notes.ItemsSource != Form1.note_template)
+            //else
+            //{
+            //    if (note_collection != null)
+            //    {
+            //        note_collection = Form1.note_template;
+            //        //for (int i = 0; i < listBx.Items.Count; i++)
+            //        //{
+            //        //    converted_from_listBox_collection.Add(new Note_Template(listBx.Items[i] as Note_Template));
+            //        //}
+            //        if (listBx.Items != null)
+            //        {
+            //            for (int i = 0; i < note_collection.Count; i++)
+            //            {
+            //                if ((listBx.SelectedItem as Note_Template).Creation_Date == note_collection[i].Creation_Date)
+            //                {
+            //                    //note_index_in_collection = i;
+            //                    note_collection.RemoveAt(i);
+            //                }
+            //            }
+            //        }
+            //        Form1.note_template = note_collection;
+            //        Form1.ListBx_Stack_Of_Notes.ItemsSource = note_collection;
+            //    }
+            //}
+
+            Form1.All_Counter_Fills();
             Form1.All_Counter_Fills();
             //File.Delete();
             Form1.XML_Serialization(note_collection, directory);
