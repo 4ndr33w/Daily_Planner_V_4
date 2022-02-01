@@ -283,14 +283,25 @@ namespace Daily_Planner_V_4
                     {
                         temp_notes_grps.Add(new Group_of_Notes(temp_notes[i].Group));
                     }
-                    for (int i = 0; i < temp_notes_grps.Count; i++)
+                    for (int i = 0; i < temp_grps.Count; i++)
                     {
-                        if (Find_Index_Of_Equal_Grp_In_Collection(temp_notes[i].Group, temp_grps) > -1)
+                        for (int j = 0; j < temp_notes_grps.Count; j++)
                         {
-                            temp_notes_grps.RemoveAt(i);
+                            if (temp_grps[i].Grp_equals(temp_notes_grps[j]))
+                            {
+                                temp_notes_grps.RemoveAt(j);
+                            }
                         }
-                        else temp_grps.Add(new Group_of_Notes(temp_notes_grps[i]));
-                        return temp_grps;
+                        //if (Find_Index_Of_Equal_Grp_In_Collection(temp_notes[i].Group, temp_grps) > -1)
+                        //{
+                        //    temp_notes_grps.RemoveAt(i);
+                        //}
+                        //else temp_grps.Add(new Group_of_Notes(temp_notes_grps[i]));
+                        //return temp_grps;
+                    }
+                    foreach (var grp in temp_notes_grps)
+                    {
+                        temp_grps.Add(new Group_of_Notes(grp));
                     }
                 }
                 //загружаем группы из файла заметок в отсутствие файла групп;  // удаляем дублирующиеся группы 
