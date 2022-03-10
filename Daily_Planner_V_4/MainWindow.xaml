@@ -426,6 +426,7 @@
                                                                             BorderThickness="0"
                                                                             Background="Transparent"
                                                                             Visibility="{Binding Btn_Hide_Compl_or_Exp_note_Visibility}"
+                                                                            Click="Btn_Hide_Expired_Complete_Note_Click"
                                                                             DockPanel.Dock="Right">
                                                                         <Border BorderBrush="White" 
                                                                                 BorderThickness="3" 
@@ -440,15 +441,15 @@
                                                                         </Border>
                                                                     </Button>
 
-                                                                    <TextBlock Text="{Binding Status_Title}" Margin="5,2,5,2" FontSize="14" FontStyle="Oblique" FontStretch="ExtraExpanded"/>
+                                                                    <TextBlock Text="{Binding Status_Title}" Margin="5,2,5,2" FontSize="14" FontStyle="Oblique" Foreground="{Binding Foreground}" FontStretch="ExtraExpanded"/>
                                                                     <TextBlock Text="{Binding Expired}" Foreground="White" FontSize="14" FontStyle="Oblique" FontStretch="ExtraExpanded"/>
                                                                 </DockPanel>
                                                             </StackPanel>
 
                                                             <StackPanel Orientation="Vertical">
                                                                 <DockPanel>
-                                                                    <TextBlock Text="{x:Static language:Lang.Who_string}" Margin="10,1,0,1"/>
-                                                                    <TextBlock Text="{Binding Executor}" Margin="5,1,5,1"/>
+                                                                    <TextBlock Text="{x:Static language:Lang.Who_string}" Foreground="{Binding Foreground}" Margin="10,1,0,1"/>
+                                                                    <TextBlock Text="{Binding Executor}" Foreground="{Binding Foreground}" Margin="5,1,5,1"/>
                                                                     <StackPanel DockPanel.Dock="Right">
                                                                         <Button x:Name="Btn_complete_task" 
                                                                                   Visibility="{Binding Mart_to_Complete_note_Visibility}"

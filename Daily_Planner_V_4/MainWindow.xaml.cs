@@ -317,6 +317,16 @@ namespace Daily_Planner_V_4
                 {
                     temp_data.Add(new Note_Template(item));
                 }
+                foreach (var note in temp_data)
+                {
+                    if (note.Date < DateTime.Now)
+                    {
+                        note.Color = Colors.Transparent.ToString();
+                        note.Foreground = Colors.White.ToString();
+                        note.Urgency = false;
+                        note.Status_Title = Properties.Languages.Lang.Expired_string;
+                    }
+                }
                 return temp_data;
             }
             return temp_data;
@@ -484,7 +494,7 @@ namespace Daily_Planner_V_4
                         note.Delete_Btn_Visibility = StrDataRepository.Visibility_visible;
                         note.Edit_Btn_Visibility = StrDataRepository.Visibility_visible;
                         note.Mart_to_Complete_note_Visibility = StrDataRepository.Visibility_visible;
-                        if (note.Expired == Properties.Languages.Lang.Expired_string || note.Expired == Properties.Languages.Lang.Completed_Note_String)
+                        if (note.Status_Title == Properties.Languages.Lang.Expired_string || note.Status_Title == Properties.Languages.Lang.Completed_Note_String)
                         {
                             note.Btn_Hide_Compl_or_Exp_note_Visibility = StrDataRepository.Visibility_visible;
                             note.Mart_to_Complete_note_Visibility = StrDataRepository.Visibility_hidden;
@@ -514,6 +524,15 @@ namespace Daily_Planner_V_4
                 Delete_Note_Request_Window delete_note_Wndw = new Delete_Note_Request_Window();
                 delete_note_Wndw.Owner = this;
                 delete_note_Wndw.Show();
+            }
+        }
+
+        private void Btn_Hide_Expired_Complete_Note_Click(object sender, RoutedEventArgs e)
+        {
+            if ((ListBx_Stack_Of_Notes.SelectedItem as Note_Template).Status_Title == StrDataRepository.Status_Expired_En || (ListBx_Stack_Of_Notes.SelectedItem as Note_Template).Status_Title == StrDataRepository.Status_Expired_Ru)
+            {
+
+               // expired_note_template.Add (new Note_Data(ListBx_Stack_Of_Notes.SelectedItem as Note_Data))
             }
         }
     }

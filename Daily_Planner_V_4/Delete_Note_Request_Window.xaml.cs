@@ -57,11 +57,11 @@ namespace Daily_Planner_V_4
                     Delete_Note_Method(Form1.note_template/*.Where(Form1.find_grp_filter) as ObservableCollection<Note_Template>*/, Form1.ListBx_Stack_Of_Notes, StrDataRepository.directory);
                     Form1.ListBx_Stack_Of_Notes.Items.Refresh();
                 }
-                //if (Form1.ListBx_Stack_Of_Notes.Items != null && Form1.ListBx_Grp_Of_Delegated_Tasks.SelectedItem != null)
-                //{
-                //    Delete_Note_Method(Form1.note_Datas.Where(Form1.find_grp_filter) as ObservableCollection<Note_Data>, Form1.ListBx_Stack_Of_Notes, StrDataRepository.directory);
-                //}
             }
+            Form1.ListBx_Stack_Of_Notes.Items.Refresh();
+            Form1.ListBx_Grp_Of_My_Tasks.Items.Refresh();
+            Form1.ListBx_Grp_Of_Delegated_Tasks.Items.Refresh();
+            Form1.All_Counter_Fills();
             this.Hide();
         }
         private void Delete_Note_Method(ObservableCollection<Note_Template> note_collection, ListBox listBx, string directory)
@@ -86,18 +86,6 @@ namespace Daily_Planner_V_4
                         }
                     }
                 }
-              
-
-
-                //    for (int i = 0; i < note_collection.Count; i++)
-                //{
-                //    if (one_note.Creation_Date == note_collection[i].Creation_Date)
-                //    {
-                //        //note_index_in_collection = i;
-                //        note_collection.Remove(one_note);
-                //    }
-                //}
-
             }
             Form1.ListBx_Stack_Of_Notes.ItemsSource = note_collection;
 
@@ -105,44 +93,7 @@ namespace Daily_Planner_V_4
             if (Form1.ListBx_Stack_Of_Notes.ItemsSource == Form1.completed_note_template) { Form1.completed_note_template = note_collection; }
             else Form1.ListBx_Stack_Of_Notes.ItemsSource = Form1.note_template;
 
-            //}
-            //выполняется в случае, когда отображение заметок фильтуется по группам
-            //if (Form1.ListBx_Stack_Of_Notes.ItemsSource != Form1.expired_note_template && Form1.ListBx_Stack_Of_Notes.ItemsSource != Form1.completed_note_template && Form1.ListBx_Stack_Of_Notes.ItemsSource != Form1.note_template)
-            //else
-            //{
-            //    if (note_collection != null)
-            //    {
-            //        note_collection = Form1.note_template;
-            //        //for (int i = 0; i < listBx.Items.Count; i++)
-            //        //{
-            //        //    converted_from_listBox_collection.Add(new Note_Template(listBx.Items[i] as Note_Template));
-            //        //}
-            //        if (listBx.Items != null)
-            //        {
-            //            for (int i = 0; i < note_collection.Count; i++)
-            //            {
-            //                if ((listBx.SelectedItem as Note_Template).Creation_Date == note_collection[i].Creation_Date)
-            //                {
-            //                    //note_index_in_collection = i;
-            //                    note_collection.RemoveAt(i);
-            //                }
-            //            }
-            //        }
-            //        Form1.note_template = note_collection;
-            //        Form1.ListBx_Stack_Of_Notes.ItemsSource = note_collection;
-            //    }
-            //}
-
-            Form1.All_Counter_Fills();
-            //Form1.All_Counter_Fills();
-            //File.Delete();
             Form1.XML_Serialization(note_collection, directory);
-            //Form1.All_Counter_Fills();
-            //Form1.Group_Counter_Fills(note_collection, Form1.my_Grps_Panel);
-            //Form1.Group_Counter_Fills(note_collection, Form1.delegated_Grps_Panel);
-            Form1.ListBx_Stack_Of_Notes.Items.Refresh();
-            Form1.ListBx_Grp_Of_My_Tasks.Items.Refresh();
-            Form1.ListBx_Grp_Of_Delegated_Tasks.Items.Refresh();
         }
     }
 }

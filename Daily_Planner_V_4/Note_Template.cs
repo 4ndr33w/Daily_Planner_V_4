@@ -54,7 +54,7 @@ namespace Daily_Planner_V_4
         {
             get
             {
-                string time = _date.ToString("hh' ':' ' mm");
+                string time = _date.ToString("HH' ':' ' mm");
                 return time;
             }
         }
