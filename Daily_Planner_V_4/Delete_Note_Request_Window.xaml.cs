@@ -134,7 +134,7 @@ namespace Daily_Planner_V_4
             //}
 
             Form1.All_Counter_Fills();
-            Form1.All_Counter_Fills();
+            //Form1.All_Counter_Fills();
             //File.Delete();
             Form1.XML_Serialization(note_collection, directory);
             //Form1.All_Counter_Fills();

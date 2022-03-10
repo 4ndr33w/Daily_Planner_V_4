@@ -258,6 +258,7 @@ namespace Daily_Planner_V_4
         public ObservableCollection<Group_of_Notes> XML_Grps_Deserialization(string directory)
         {
             ObservableCollection<Group_of_Notes> temp_grps = new ObservableCollection<Group_of_Notes>();
+            HashSet<Group_of_Notes> hashSet_Groups = new HashSet<Group_of_Notes>();
             List<Note_Data> temp_notes = new List<Note_Data>();
             List<Group_of_Notes> temp_notes_grps = new List<Group_of_Notes>();
             try
@@ -272,6 +273,7 @@ namespace Daily_Planner_V_4
                     fStream.Close();
                 }
                 // загружаем группы из файла с заметками при существующем файле групп;   сравниваем с уже существующими группами
+
                 if (File.Exists(note_file_path) && File.Exists(grps_file_path))
                 {
                     XmlSerializer xml_serializer = new XmlSerializer(typeof(List<Note_Data>));
@@ -279,21 +281,62 @@ namespace Daily_Planner_V_4
                     temp_notes = xml_serializer.Deserialize(fStream) as List<Note_Data>;
                     fStream.Close();
 
+
+                    //////////////////////////////////////////////////////////////////////
+                    int grp_counter = 0;
                     for (int i = 0; i < temp_notes.Count; i++)
                     {
-                        temp_notes_grps.Add(new Group_of_Notes(temp_notes[i].Group));
-                    }
-                    for (int i = 0; i < temp_grps.Count; i++)
-                    {
-                        for (int j = 0; j < temp_notes_grps.Count; j++)
+                        for (int j = 0; j < temp_grps.Count; j++)
                         {
-                            if (temp_grps[i].Grp_equals(temp_notes_grps[j]))        temp_notes_grps.RemoveAt(j);
+                            if (temp_notes[i].Group.Grp_equals(temp_grps[j]))
+                            {
+                                grp_counter++;
+                            }
+                        }
+                        if (grp_counter == 0)
+                        {
+                            temp_grps.Add(new Group_of_Notes(temp_notes[i].Group));
                         }
                     }
-                    foreach (var grp in temp_notes_grps)
-                    {
-                        temp_grps.Add(new Group_of_Notes(grp));
-                    }
+                    ///////////////////////////////////////////////////////////////////////
+
+                    //for (int i = 0; i < temp_notes.Count; i++)
+                    //{
+                    //    if (temp_grps.Contains(temp_notes[i].Group))
+                    //    {
+                    //        temp_grps.Add(new Group_of_Notes(temp_notes[i].Group));
+                    //    }
+                    //}
+
+                    ///////////////////////////////////////////////////////////////////////////////////////////
+                    //foreach (var grp in temp_grps)
+                    //{
+                    //    hashSet_Groups.Add(new Group_of_Notes(grp));
+                    //}
+                    //foreach (var note in temp_notes)
+                    //{
+                    //    hashSet_Groups.Add(new Group_of_Notes(note.Group));
+                    //}
+                    //foreach (var hash_grp in hashSet_Groups)
+                    //{
+                    //    temp_grps.Add(new Group_of_Notes(hash_grp));
+                    //}
+                    ///////////////////////////////////////////////////////////////////////////////////////////
+                    //for (int i = 0; i < temp_notes.Count; i++)
+                    //{
+                    //    temp_notes_grps.Add(new Group_of_Notes(temp_notes[i].Group));
+                    //}
+                    //for (int i = 0; i < temp_grps.Count; i++)
+                    //{
+                    //    for (int j = 0; j < temp_notes_grps.Count; j++)
+                    //    {
+                    //        if (temp_grps[i].Grp_equals(temp_notes_grps[j])) temp_notes_grps.RemoveAt(j);
+                    //    }
+                    //}
+                    //foreach (var grp in temp_notes_grps)
+                    //{
+                    //    temp_grps.Add(new Group_of_Notes(grp));
+                    //}
                 }
                 //загружаем группы из файла заметок в отсутствие файла групп;  // удаляем дублирующиеся группы 
                 else if (File.Exists(note_file_path) && !File.Exists(grps_file_path))
@@ -304,22 +347,112 @@ namespace Daily_Planner_V_4
                     fStream.Close();
                     ObservableCollection<Group_of_Notes> temp_notes_grps_observable = new ObservableCollection<Group_of_Notes>();
 
+                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////\
+                    int grp_counter = 0;
                     for (int i = 0; i < temp_notes.Count; i++)
                     {
-                        temp_notes_grps_observable.Add(new Group_of_Notes(temp_notes[i].Group));
-                    }
-                    // пришлось 3 раза прогнать проверку на дублирование групп чтоб удалились ВСЕ,млять, мать их, дублирующиеся группы... даже 2-х раз,сцуко,млять, #$%дец, недостаточно!!!
-                    for (int k = 0; k < 3; k++)
-                    {
-                        for (int i = 0; i < temp_notes_grps_observable.Count; i++)
+                        for (int j = 0; j < temp_grps.Count; j++)
                         {
-                            for (int j = i + 1; j < temp_notes_grps_observable.Count; j++)
+                            if (temp_notes[i].Group.Grp_equals(temp_grps[j]))
                             {
-                                if (temp_notes_grps_observable[i].Grp_equals(temp_notes_grps_observable[j])) temp_notes_grps_observable.RemoveAt(i);
+                                grp_counter++;
                             }
                         }
+                        if (grp_counter == 0)
+                        {
+                            temp_grps.Add(new Group_of_Notes(temp_notes[i].Group));
+                        }
                     }
-                    temp_grps = temp_notes_grps_observable;
+
+
+
+                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    ///
+                    //for (int i = 0; i < temp_notes.Count; i++)
+                    //{
+                    //    if (!temp_grps.Contains(temp_notes[i].Group))
+                    //    {
+                    //        temp_grps.Add(new Group_of_Notes(temp_notes[i].Group));
+                    //    }
+                    //}
+                    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    //foreach (var note in temp_notes)
+                    //{
+                    //    hashSet_Groups.Add(note.Group);
+                    //}
+                    //foreach (var hash_grp in hashSet_Groups)
+                    //{
+                    //    temp_grps.Add(new Group_of_Notes(hash_grp));
+                    //}
+                    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    //for (int i = 0; i < temp_notes.Count; i++)
+                    //{
+                    //    temp_notes_grps_observable.Add(new Group_of_Notes(temp_notes[i].Group));
+                    //}
+                    //// пришлось 3 раза прогнать проверку на дублирование групп чтоб удалились ВСЕ,млять, мать их, дублирующиеся группы... даже 2-х раз,сцуко,млять, #$%дец, недостаточно!!!
+                    //for (int k = 0; k < 3; k++)
+                    //{
+                    //    for (int i = 0; i < temp_notes_grps_observable.Count; i++)
+                    //    {
+                    //        for (int j = i + 1; j < temp_notes_grps_observable.Count; j++)
+                    //        {
+                    //            if (temp_notes_grps_observable[i].Grp_equals(temp_notes_grps_observable[j])) temp_notes_grps_observable.RemoveAt(i);
+                    //        }
+                    //    }
+                    //}
+                    //temp_grps = temp_notes_grps_observable;
+
+
+                    ///////////
+
+                    //    if (File.Exists(note_file_path) && File.Exists(grps_file_path))
+                    //{
+                    //    XmlSerializer xml_serializer = new XmlSerializer(typeof(List<Note_Data>));
+                    //    Stream fStream = new FileStream(note_file_path, FileMode.Open, FileAccess.Read);
+                    //    temp_notes = xml_serializer.Deserialize(fStream) as List<Note_Data>;
+                    //    fStream.Close();
+
+                    //    for (int i = 0; i < temp_notes.Count; i++)
+                    //    {
+                    //        temp_notes_grps.Add(new Group_of_Notes(temp_notes[i].Group));
+                    //    }
+                    //    for (int i = 0; i < temp_grps.Count; i++)
+                    //    {
+                    //        for (int j = 0; j < temp_notes_grps.Count; j++)
+                    //        {
+                    //            if (temp_grps[i].Grp_equals(temp_notes_grps[j]))        temp_notes_grps.RemoveAt(j);
+                    //        }
+                    //    }
+                    //    foreach (var grp in temp_notes_grps)
+                    //    {
+                    //        temp_grps.Add(new Group_of_Notes(grp));
+                    //    }
+                    //}
+                    ////загружаем группы из файла заметок в отсутствие файла групп;  // удаляем дублирующиеся группы 
+                    //else if (File.Exists(note_file_path) && !File.Exists(grps_file_path))
+                    //{
+                    //    XmlSerializer xml_serializer = new XmlSerializer(typeof(List<Note_Data>));
+                    //    Stream fStream = new FileStream(note_file_path, FileMode.Open, FileAccess.Read);
+                    //    temp_notes = xml_serializer.Deserialize(fStream) as List<Note_Data>;
+                    //    fStream.Close();
+                    //    ObservableCollection<Group_of_Notes> temp_notes_grps_observable = new ObservableCollection<Group_of_Notes>();
+
+                    //    for (int i = 0; i < temp_notes.Count; i++)
+                    //    {
+                    //        temp_notes_grps_observable.Add(new Group_of_Notes(temp_notes[i].Group));
+                    //    }
+                    //    // пришлось 3 раза прогнать проверку на дублирование групп чтоб удалились ВСЕ,млять, мать их, дублирующиеся группы... даже 2-х раз,сцуко,млять, #$%дец, недостаточно!!!
+                    //    for (int k = 0; k < 3; k++)
+                    //    {
+                    //        for (int i = 0; i < temp_notes_grps_observable.Count; i++)
+                    //        {
+                    //            for (int j = i + 1; j < temp_notes_grps_observable.Count; j++)
+                    //            {
+                    //                if (temp_notes_grps_observable[i].Grp_equals(temp_notes_grps_observable[j])) temp_notes_grps_observable.RemoveAt(i);
+                    //            }
+                    //        }
+                    //    }
+                    //    temp_grps = temp_notes_grps_observable;
                     return temp_grps;
                 }
                 return temp_grps;
@@ -381,7 +514,7 @@ namespace Daily_Planner_V_4
         {
             Add_Note_Window add_note_Wndw = new Add_Note_Window();
             add_note_Wndw.Owner = this;
-            ListBx_Stack_Of_Notes.ItemsSource = note_template;
+            //ListBx_Stack_Of_Notes.ItemsSource = note_template;
             create_new_note = true;
             //strings_.CreateOrEditNote_Mode = "create";
             add_note_Wndw.Show();

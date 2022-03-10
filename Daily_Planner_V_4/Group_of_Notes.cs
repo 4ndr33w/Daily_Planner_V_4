@@ -117,5 +117,17 @@ namespace Daily_Planner_V_4
                 return true;
             else return false;
         }
+
+        public class Compare_Groups : IComparer<Group_of_Notes>
+        {
+            public int Compare(Group_of_Notes x, Group_of_Notes y)
+            {
+                if (string.Compare(x.Group_Name, y.Group_Name) == 0 &&
+                    string.Compare(x.Execution_of, y._execution_of) == 0 &&
+                    string.Compare(x._color, y._color) == 0)
+                { return 0; }
+                else return 1;
+            }
+        }
     }
 }

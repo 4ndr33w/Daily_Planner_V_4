@@ -75,6 +75,8 @@ namespace Daily_Planner_V_4
             MainWindow Form1 = this.Owner as MainWindow;
             union_grps = Form1.Union_Grps_Method(Form1.my_Grps_Panel, Form1.delegated_Grps_Panel);
 
+            grp_panel = Form1.my_Grps_Panel;
+
             if (date_picker.Text == String.Empty) { date_picker.Text = DateTime.Now.ToShortDateString(); }
             else if (time_picker.Text == String.Empty) { time_picker.Text = DateTime.Now.ToShortTimeString(); }
 
@@ -96,27 +98,51 @@ namespace Daily_Planner_V_4
                 Form1.ListBx_Stack_Of_Notes.Items.Refresh();
                 if (CmbBox_Task_Groups.SelectedItem == null)
                 {
+                    int counter = 0;
                     foreach (var grp in Form1.my_Grps_Panel.ToArray())
                     {
-                        if (!grp.Grp_equals(default_grp))
+                        if (grp.Grp_equals(default_grp))
                         {
-                            Form1.my_Grps_Panel.Add(new Group_Panel_Data(default_grp));
+                            counter++;
+                            //Form1.my_Grps_Panel.Add(new Group_Panel_Data(default_grp));
                         }
                     }
+                    if (counter == 0) { grp_panel /*Form1.my_Grps_Panel*/.Add(new Group_Panel_Data(default_grp)); }
+                    //if (counter > 0) {   }
+                    //grp_panel = Form1.my_Grps_Panel;
+
+                    //if (!grp_panel.Contains(default_grp))
+                    //{
+                    //    grp_panel.Add(new Group_Panel_Data(default_grp));
+                    //}
+                    //for (int k = 0; k < 3; k++)
+                    //{
+                    //    for (int i = 0; i < grp_panel.Count; i++)
+                    //    {
+                    //        for (int j = i + 1; j < grp_panel.Count; j++)
+                    //        {
+                    //            if (grp_panel[i].Equals(grp_panel[j])) grp_panel.RemoveAt(j);
+                    //        }
+                    //    }
+                    //}
+                    Form1.my_Grps_Panel.RemoveAt(Form1.my_Grps_Panel.Count - 1);
+                    //MessageBox.Show(Form1.my_Grps_Panel.Count.ToString());
+                   
+                    Form1.my_Grps_Panel = grp_panel;
                 }
             }
-
-            // при добавлении заметки с дефолтной группой (не выбранной группой в комбобоксе) не происходит добавление дефолтной группы в список
-            // не удалось корректно решить вопрос с добавлением дефолтной группы из тела самой заметки - группа дублируется.. хз почему
-            // по этому было принято решение сбросить ObservableCollection и загрузить все с сейва - тогда все группы подгружаются корректно,
-            // включая дефолтную группу из вновь созданной заметки
-            {
-                Form1.my_Grps_Panel.Clear();
-                Form1.delegated_Grps_Panel.Clear();
-                Form1.note_template.Clear();
-                Form1.Load_Default_Data();
-            }
-            //Form1.All_Counter_Fills();
+            Form1.XML_Serialization(Form1.note_template, StrDataRepository.directory);
+            //// при добавлении заметки с дефолтной группой (не выбранной группой в комбобоксе) не происходит добавление дефолтной группы в список
+            //// не удалось корректно решить вопрос с добавлением дефолтной группы из тела самой заметки - группа дублируется.. хз почему
+            //// по этому было принято решение сбросить ObservableCollection и загрузить все с сейва - тогда все группы подгружаются корректно,
+            //// включая дефолтную группу из вновь созданной заметки
+            //{
+            //    Form1.my_Grps_Panel.Clear();
+            //    Form1.delegated_Grps_Panel.Clear();
+            //    Form1.note_template.Clear();
+            //    Form1.Load_Default_Data();
+            //}
+            Form1.All_Counter_Fills();
             this.Hide();
         }
 
