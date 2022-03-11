@@ -91,6 +91,8 @@ namespace Daily_Planner_V_4
         {
             union_Grps = XML_Grps_Deserialization(StrDataRepository.directory);
             note_template = Fill_Note_Template_From_List_Data_and_sortByDate(   XML_Note_Deserialization(strings_.Note_Data_Save)  );
+            expired_note_template = Fill_Note_Template_From_List_Data_and_sortByDate( XML_Note_Deserialization(StrDataRepository.expired_note_full_filePath));
+            completed_note_template = Fill_Note_Template_From_List_Data_and_sortByDate(XML_Note_Deserialization(StrDataRepository.completed_note_full_filePath));
             Fill_Grps_From_Union(union_Grps);
             ListBx_Grp_Of_My_Tasks.ItemsSource = my_Grps_Panel;
             ListBx_Grp_Of_Delegated_Tasks.ItemsSource = delegated_Grps_Panel;
@@ -203,11 +205,11 @@ namespace Daily_Planner_V_4
                 }
                 if (data_to_serialize is ObservableCollection<Group_of_Notes>) { file_path = directory + strings_.Grps_Short_FileName; Xml_auxillary_serialize_Method(data_to_serialize, file_path); }
                 //else if (data_to_serialize is ObservableCollection<Note_Data>) { file_path = directory + strings_.Note_Data_Save; }
-                else if (data_to_serialize is ObservableCollection<Note_Template> && 
+                if (data_to_serialize is ObservableCollection<Note_Template> && 
                     ((data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title == StrDataRepository.Status_Completed_En ||
                     (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title == StrDataRepository.Status_Completed_Ru))
                 {
-                    file_path = directory + strings_.Completed_Note_Data_Save;
+                    file_path = directory + StrDataRepository.completed_note_short_filePath;
                     foreach (var note in data_to_serialize as ObservableCollection<Note_Template>)
                     {
                         temp_data.Add(new Note_Data(note));
@@ -215,24 +217,24 @@ namespace Daily_Planner_V_4
                     Xml_auxillary_serialize_Method(temp_data, file_path);
                 }
 
-                else if (data_to_serialize is ObservableCollection<Note_Template> &&
+                if (data_to_serialize is ObservableCollection<Note_Template> &&
                    ((data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title == StrDataRepository.Status_Expired_En ||
                    (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title == StrDataRepository.Status_Expired_Ru))
                 {
-                    file_path = directory + strings_.Completed_Note_Data_Save;
+                    file_path = directory + StrDataRepository.expired_note_short_filePath;
                     foreach (var note in data_to_serialize as ObservableCollection<Note_Template>)
                     {
                         temp_data.Add(new Note_Data(note));
                     }
                     Xml_auxillary_serialize_Method(temp_data, file_path);
                 }
-                else if (data_to_serialize is ObservableCollection<Note_Template> &&
+                if (data_to_serialize is ObservableCollection<Note_Template> &&
                  (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title != StrDataRepository.Status_Expired_En &&
                  (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title != StrDataRepository.Status_Expired_Ru &&
                  (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title != StrDataRepository.Status_Completed_En &&
                  (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title != StrDataRepository.Status_Completed_Ru ) 
                 {
-                    file_path = /*directory + */strings_.Note_Data_Save;
+                    file_path = directory + StrDataRepository.note_short_fileName;
                     foreach (var note in data_to_serialize as ObservableCollection<Note_Template>)
                     {
                         temp_data.Add(new Note_Data(note));
@@ -527,12 +529,87 @@ namespace Daily_Planner_V_4
             }
         }
 
+        public int Selected_Note_Index(ObservableCollection<Note_Template> note_data_collection)
+        {
+            ObservableCollection<Note_Template> data = new ObservableCollection<Note_Template>();
+            Note_Template current_note = new Note_Template();
+            current_note = ListBx_Stack_Of_Notes.SelectedItem as Note_Template;
+            data = note_data_collection;
+            int index = -1;
+            if (ListBx_Stack_Of_Notes.SelectedItem != null && data != null)
+            {
+                for (int i = 0; i < data.Count; i++)
+                {
+                    if (data[i].Creation_Date == current_note.Creation_Date) { index = i; }
+                }
+            }
+            return index;
+        }
+
         private void Btn_Hide_Expired_Complete_Note_Click(object sender, RoutedEventArgs e)
         {
+            int index = -1;
+            ObservableCollection<Note_Template> temp_filtered_data = new ObservableCollection<Note_Template>();
             if ((ListBx_Stack_Of_Notes.SelectedItem as Note_Template).Status_Title == StrDataRepository.Status_Expired_En || (ListBx_Stack_Of_Notes.SelectedItem as Note_Template).Status_Title == StrDataRepository.Status_Expired_Ru)
             {
+                expired_note_template.Add(ListBx_Stack_Of_Notes.SelectedItem as Note_Template);
+                XML_Serialization(expired_note_template, StrDataRepository.directory);
+            }
+            if ((ListBx_Stack_Of_Notes.SelectedItem as Note_Template).Status_Title == StrDataRepository.Status_Completed_En || (ListBx_Stack_Of_Notes.SelectedItem as Note_Template).Status_Title == StrDataRepository.Status_Completed_En)
+            {
+                completed_note_template.Add(ListBx_Stack_Of_Notes.SelectedItem as Note_Template);
+                XML_Serialization(completed_note_template, StrDataRepository.directory);
+            }
+            index = Selected_Note_Index(note_template);
+            note_template.RemoveAt(index);
 
-               // expired_note_template.Add (new Note_Data(ListBx_Stack_Of_Notes.SelectedItem as Note_Data))
+            if (ListBx_Stack_Of_Notes.ItemsSource != note_template)
+            {
+                for (int i = 0; i < ListBx_Stack_Of_Notes.Items.Count; i++)
+                {
+                    temp_filtered_data.Add(ListBx_Stack_Of_Notes.Items[i] as Note_Template);
+                }
+                index = Selected_Note_Index(temp_filtered_data);
+                temp_filtered_data.RemoveAt(index);
+                ListBx_Stack_Of_Notes.ItemsSource = temp_filtered_data;
+                index = Selected_Note_Index(note_template);
+                note_template.RemoveAt(index);
+            }
+            File.Delete(StrDataRepository.note_full_filePath);
+            XML_Serialization(note_template, StrDataRepository.directory);
+            All_Counter_Fills();
+            ListBx_Grp_Of_My_Tasks.Items.Refresh();
+            ListBx_Grp_Of_Delegated_Tasks.Items.Refresh();
+            ListBx_Grp_Of_My_Tasks.SelectedIndex = -1;
+            ListBx_Grp_Of_Delegated_Tasks.SelectedIndex = -1;
+        }
+
+        private void Btn_complete_task_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Btn_Show_Expired_Notes_Click(object sender, RoutedEventArgs e)
+        {
+            if (expired_note_template != null)
+            {
+                ListBx_Stack_Of_Notes.SelectedIndex = -1;
+                ListBx_Stack_Of_Notes.ItemsSource = expired_note_template;
+
+                ListBx_Grp_Of_My_Tasks.SelectedIndex = -1;
+                ListBx_Grp_Of_Delegated_Tasks.SelectedIndex = -1;
+            }
+        }
+
+        private void Btn_Show_Completed_Notes_Click(object sender, RoutedEventArgs e)
+        {
+            if (completed_note_template != null)
+            {
+                ListBx_Stack_Of_Notes.SelectedIndex = -1;
+                ListBx_Stack_Of_Notes.ItemsSource = completed_note_template;
+
+                ListBx_Grp_Of_My_Tasks.SelectedIndex = -1;
+                ListBx_Grp_Of_Delegated_Tasks.SelectedIndex = -1;
             }
         }
     }

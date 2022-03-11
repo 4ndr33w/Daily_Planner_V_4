@@ -348,7 +348,7 @@
                                         </ListBox>
                                     </StackPanel>
                                 </Expander>
-                                <Button x:Name="Btn_Show_Expired_Notes" Background="Transparent" Margin="0,30,0,0">
+                                <Button x:Name="Btn_Show_Expired_Notes" Background="Transparent" Margin="0,30,0,0" Click="Btn_Show_Expired_Notes_Click">
 
                                     <DockPanel Style="{StaticResource style_Group_Panel_Dock_Counters}">
 
@@ -359,7 +359,7 @@
                                                   Style="{StaticResource style_Group_Panel_Counter_TxtBox}"/>
                                     </DockPanel>
                                 </Button>
-                                <Button x:Name="Btn_Show_Completed_Notes" Background="Transparent" Margin="0,5,0,0">
+                                <Button x:Name="Btn_Show_Completed_Notes" Background="Transparent" Margin="0,5,0,0" Click="Btn_Show_Completed_Notes_Click">
 
                                     <DockPanel Style="{StaticResource style_Group_Panel_Dock_Counters}">
                                         <TextBox Text="{x:Static language:Lang.Show_Complete_Notes_Btn}"
@@ -452,13 +452,14 @@
                                                                     <TextBlock Text="{Binding Executor}" Foreground="{Binding Foreground}" Margin="5,1,5,1"/>
                                                                     <StackPanel DockPanel.Dock="Right">
                                                                         <Button x:Name="Btn_complete_task" 
-                                                                                  Visibility="{Binding Mart_to_Complete_note_Visibility}"
-                                                                                  Margin="10,1,5,1" 
+                                                                                Visibility="{Binding Mart_to_Complete_note_Visibility}"
+                                                                                Margin="10,1,5,1" 
                                                                                 Width="80"
                                                                                 HorizontalContentAlignment="Center"
                                                                                 Opacity="55"
+                                                                                Click="Btn_complete_task_Click"
                                                                                 Background="Transparent"
-                                                                                  HorizontalAlignment="Right">
+                                                                                HorizontalAlignment="Right">
                                                                             <TextBlock Text="{x:Static language:Lang.Complete_Task_Btn}" Padding="3,3,3,3" TextWrapping="Wrap" HorizontalAlignment="Center"/>
                                                                         </Button>
                                                                     </StackPanel>
