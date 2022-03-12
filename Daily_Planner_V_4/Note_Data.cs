@@ -13,7 +13,7 @@ namespace Daily_Planner_V_4
         protected string _header;
         protected string _executor;
         protected DateTime _creation_date;
-        protected bool _status = false;
+        protected string _status;
         protected bool _urgency;
         protected Group_of_Notes _group;
 
@@ -24,7 +24,7 @@ namespace Daily_Planner_V_4
         public string Header { get => _header; set => _header = value; }
         public string Executor { get => _executor; set => _executor = value; }
         public DateTime Creation_Date { get => _creation_date; set => _creation_date = value; }
-        public bool Status { get => _status; set => _status = value; }
+        public string Status { get => _status; set => _status = value; }
         public bool Urgency { get => _urgency; set => _urgency = value; }
         public Group_of_Notes Group { get => _group; set => _group = value; }
 
@@ -35,7 +35,7 @@ namespace Daily_Planner_V_4
             _header = Properties.Languages.Lang.Note_Default_Header;
             _executor = Properties.Languages.Lang.Executor_string_Me;
             _creation_date = DateTime.Now;
-            _status = false;
+            _status = "";
             _urgency = false;
             _group = _default_group;
         }
@@ -50,7 +50,7 @@ namespace Daily_Planner_V_4
             _urgency = note.Urgency;
             _group = note.Group;
         }
-        public Note_Data(DateTime date, string note, string header, string executor, DateTime creation_date, bool status, bool urgency, Group_of_Notes grp)
+        public Note_Data(DateTime date, string note, string header, string executor, DateTime creation_date, string status, bool urgency, Group_of_Notes grp)
         {
             _date = date;
             _note = note;

@@ -38,8 +38,9 @@ namespace Daily_Planner_V_4
             Note_Template one_note = new Note_Template();
 
             one_note = Form1.ListBx_Stack_Of_Notes.SelectedItem as Note_Template;
-            
-            int index = Form1.Selected_Note_Index(temp_note_collection);
+
+            //int index = Form1.Selected_Note_Index(temp_note_collection);
+            File.Delete(StrDataRepository.note_full_filePath);
 
             if  (Form1.ListBx_Stack_Of_Notes.ItemsSource == Form1.note_template)
             {
@@ -56,10 +57,13 @@ namespace Daily_Planner_V_4
                     temp_note_collection.Add(Form1.ListBx_Stack_Of_Notes.Items[i] as Note_Template);
                 }
                 //index = Form1.Selected_Note_Index(temp_note_collection);
-                Form1.note_template.Remove(one_note);
+                int index = Form1.Selected_Note_Index(Form1.note_template);
+                Form1.note_template.RemoveAt(index);
                 temp_note_collection.Remove(one_note);
-                //Form1.ListBx_Stack_Of_Notes.ItemsSource = temp_note_collection;
+                Form1.ListBx_Stack_Of_Notes.ItemsSource = temp_note_collection;
             }
+            one_note.Urgency = false;
+            one_note.Status = Properties.Languages.Lang.Completed_Note_String;
             one_note.Status_Title = Properties.Languages.Lang.Completed_Note_String;
             Form1.completed_note_template.Add(new Note_Template(one_note));
 
@@ -67,9 +71,11 @@ namespace Daily_Planner_V_4
             Form1.All_Counter_Fills();
 
             this.Hide();
-            //File.Delete(StrDataRepository.completed_note_full_filePath);
+            
             Form1.XML_Serialization(Form1.completed_note_template, StrDataRepository.directory);
             Form1.XML_Serialization(Form1.note_template, StrDataRepository.directory);
+
+
         }
         //public void Complete_note_Method(Note_Template one_note, ObservableCollection<Note_Template> data_collection)
         //{

@@ -65,7 +65,7 @@ namespace Daily_Planner_V_4
             _header = Properties.Languages.Lang.Note_Default_Header;
             _executor = Properties.Languages.Lang.Executor_string_Me;
             _creation_date = DateTime.Now;
-            _status = false;
+            _status = "";
             _urgency = false;
             _group = _default_group;
             _color = _group.Color;

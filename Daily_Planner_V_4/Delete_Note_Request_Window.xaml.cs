@@ -27,6 +27,7 @@ namespace Daily_Planner_V_4
             InitializeComponent();
         }
 
+        int data_count = 0;
         private void Btn_Cancel_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
@@ -38,23 +39,36 @@ namespace Daily_Planner_V_4
 
             if (Form1.ListBx_Stack_Of_Notes.ItemsSource == Form1.note_template)
             {
-                Delete_Note_Method(Form1.note_template, Form1.ListBx_Stack_Of_Notes, StrDataRepository.directory);
+                data_count = Form1.note_template.Count;
+                File.Delete(StrDataRepository.note_full_filePath);
+                Delete_Note_Method(Form1.note_template, Form1.ListBx_Stack_Of_Notes, StrDataRepository.directory, data_count);
+                //if (Form1.note_template.Count != -1)
+                //    Form1.XML_Serialization(Form1.note_template, StrDataRepository.directory);
             }
             if (Form1.ListBx_Stack_Of_Notes.ItemsSource == Form1.expired_note_template)
             {
-                Delete_Note_Method(Form1.expired_note_template, Form1.ListBx_Stack_Of_Notes, StrDataRepository.directory);
+                data_count = Form1.expired_note_template.Count;
+                File.Delete(StrDataRepository.expired_note_full_filePath);
+                Delete_Note_Method(Form1.expired_note_template, Form1.ListBx_Stack_Of_Notes, StrDataRepository.directory, data_count);
                 Form1.TxtBx_Expired_Notes_Counter.Text = Form1.expired_note_template.Count.ToString();
+                //if (Form1.expired_note_template.Count != -1)
+                //    Form1.XML_Serialization(Form1.expired_note_template, StrDataRepository.directory);
             }
-            if (Form1.ListBx_Stack_Of_Notes.ItemsSource == Form1.expired_note_template)
+            if (Form1.ListBx_Stack_Of_Notes.ItemsSource == Form1.completed_note_template)
             {
-                Delete_Note_Method(Form1.completed_note_template, Form1.ListBx_Stack_Of_Notes, StrDataRepository.directory);
+                data_count = Form1.completed_note_template.Count;
+                File.Delete(StrDataRepository.completed_note_full_filePath);
+                Delete_Note_Method(Form1.completed_note_template, Form1.ListBx_Stack_Of_Notes, StrDataRepository.directory, data_count);
                 Form1.TxtBx_Completed_Notes_Counter.Text = Form1.completed_note_template.Count.ToString();
+                //if (Form1.completed_note_template.Count != -1)
+                //    Form1.XML_Serialization(Form1.completed_note_template, StrDataRepository.directory);
             }
             else
             {
                 if (Form1.ListBx_Stack_Of_Notes.Items != null/* && (Form1.ListBx_Grp_Of_My_Tasks.SelectedItem != null || Form1.ListBx_Grp_Of_Delegated_Tasks.SelectedItem != null)*/)
                 {
-                    Delete_Note_Method(Form1.note_template/*.Where(Form1.find_grp_filter) as ObservableCollection<Note_Template>*/, Form1.ListBx_Stack_Of_Notes, StrDataRepository.directory);
+                    data_count = Form1.ListBx_Stack_Of_Notes.Items.Count;
+                    Delete_Note_Method(Form1.note_template/*.Where(Form1.find_grp_filter) as ObservableCollection<Note_Template>*/, Form1.ListBx_Stack_Of_Notes, StrDataRepository.directory, data_count);
                     Form1.ListBx_Stack_Of_Notes.Items.Refresh();
                 }
             }
@@ -62,9 +76,10 @@ namespace Daily_Planner_V_4
             Form1.ListBx_Grp_Of_My_Tasks.Items.Refresh();
             Form1.ListBx_Grp_Of_Delegated_Tasks.Items.Refresh();
             Form1.All_Counter_Fills();
+            
             this.Hide();
         }
-        private void Delete_Note_Method(ObservableCollection<Note_Template> note_collection, ListBox listBx, string directory)
+        private void Delete_Note_Method(ObservableCollection<Note_Template> note_collection, ListBox listBx, string directory, int note_count)
         {
             MainWindow Form1 = new MainWindow();
             Note_Template one_note = new Note_Template();
@@ -93,7 +108,23 @@ namespace Daily_Planner_V_4
             if (Form1.ListBx_Stack_Of_Notes.ItemsSource == Form1.completed_note_template) { Form1.completed_note_template = note_collection; }
             else Form1.ListBx_Stack_Of_Notes.ItemsSource = Form1.note_template;
 
-            Form1.XML_Serialization(note_collection, directory);
+            if (note_count > 0)
+            {
+                Form1.XML_Serialization(note_collection, directory);
+            }  
+            else
+            {
+                if (note_collection[0].Status == StrDataRepository.Status_Completed_En || note_collection[0].Status == StrDataRepository.Status_Completed_Ru)
+                {
+                    File.Delete(StrDataRepository.completed_note_full_filePath);
+                }
+                if (note_collection[0].Status == StrDataRepository.Status_Expired_En || note_collection[0].Status == StrDataRepository.Status_Expired_Ru)
+                {
+                    File.Delete(StrDataRepository.expired_note_full_filePath);
+                }
+                else
+                    File.Delete(StrDataRepository.note_full_filePath);
+            }
         }
     }
 }

@@ -85,6 +85,7 @@ namespace Daily_Planner_V_4
                 current_note.Date = Convert.ToDateTime(date_picker.Text + ' ' + time_picker.Text);
                 current_note.Creation_Date = DateTime.Now;
                 current_note.Urgency = chkBx_Urgency.IsChecked == true ? true : false;
+                current_note.Status = "";
                 current_note.Note = (new TextRange(txtBx_Note_TextBox.Document.ContentStart, txtBx_Note_TextBox.Document.ContentEnd)).Text;
 
                 current_grp = CmbBox_Task_Groups.SelectedItem == null ? default_grp : CmbBox_Task_Groups.SelectedItem as Group_of_Notes;
@@ -93,6 +94,10 @@ namespace Daily_Planner_V_4
                 current_note.Color = current_grp.Color;
 
                 Form1.note_template.Add(new Note_Template(current_note));
+                Form1.ListBx_Stack_Of_Notes.ItemsSource = Form1.note_template;
+                Form1.ListBx_Grp_Of_My_Tasks.SelectedIndex = -1;
+                Form1.ListBx_Grp_Of_Delegated_Tasks.SelectedIndex = -1;
+                //Form1.All_Counter_Fills();
                 Form1.ListBx_Stack_Of_Notes.Items.Refresh();
                 if (CmbBox_Task_Groups.SelectedItem == null)
                 {
@@ -109,10 +114,13 @@ namespace Daily_Planner_V_4
                     Form1.my_Grps_Panel = grp_panel;
                 }
             }
-            Form1.XML_Serialization(Form1.note_template, StrDataRepository.directory);
-
             Form1.All_Counter_Fills();
+
+            Form1.Group_Counter_Fills(Form1.note_template, Form1.my_Grps_Panel);
+            Form1.Group_Counter_Fills(Form1.note_template, Form1.delegated_Grps_Panel);
             this.Hide();
+
+            Form1.XML_Serialization(Form1.note_template, StrDataRepository.directory);
         }
 
         private int SelectedInCmboBx_Group_Index (ObservableCollection<Group_of_Notes> grps_collection, ComboBox cmbBx_as_grp)
