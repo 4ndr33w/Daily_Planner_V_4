@@ -217,48 +217,52 @@ namespace Daily_Planner_V_4
                     Directory.CreateDirectory(directory);
                 }
 
-                if (data_to_serialize is ObservableCollection<Group_of_Notes>)
+                if (data_to_serialize.Count > -1)
                 {
-                    file_path = directory + StrDataRepository.grps_short_fileName;
-                    Xml_auxillary_serialize_Method(data_to_serialize, file_path);
-                }
-                if (data_to_serialize is ObservableCollection<Note_Template> &&
-                    ((data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title == StrDataRepository.Status_Completed_En ||
-                    (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title == StrDataRepository.Status_Completed_Ru))
+                    if (data_to_serialize is ObservableCollection<Group_of_Notes>)
+                    {
+                        file_path = directory + StrDataRepository.grps_short_fileName;
+                        Xml_auxillary_serialize_Method(data_to_serialize, file_path);
+                    }
+                    if (data_to_serialize is ObservableCollection<Note_Template> &&
+                        ((data_to_serialize as ObservableCollection<Note_Template>)[0].Status == StrDataRepository.Status_Completed_En ||
+                        (data_to_serialize as ObservableCollection<Note_Template>)[0].Status == StrDataRepository.Status_Completed_Ru))
 
-                {
-                    file_path = directory + StrDataRepository.completed_note_short_filePath;
-                    foreach (var note in data_to_serialize as ObservableCollection<Note_Template>)
                     {
-                        temp_data.Add(new Note_Data(note));
+                        file_path = directory + StrDataRepository.completed_note_short_filePath;
+                        foreach (var note in data_to_serialize as ObservableCollection<Note_Template>)
+                        {
+                            temp_data.Add(new Note_Data(note));
+                        }
+                        Xml_auxillary_serialize_Method(temp_data, file_path);
                     }
-                    Xml_auxillary_serialize_Method(temp_data, file_path);
-                }
 
-                if (data_to_serialize is ObservableCollection<Note_Template> &&
-                   ((data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title == StrDataRepository.Status_Expired_En ||
-                   (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title == StrDataRepository.Status_Expired_Ru))
-                {
-                    file_path = directory + StrDataRepository.expired_note_short_filePath;
-                    foreach (var note in data_to_serialize as ObservableCollection<Note_Template>)
+                    if (data_to_serialize is ObservableCollection<Note_Template> &&
+                       ((data_to_serialize as ObservableCollection<Note_Template>)[0].Status == StrDataRepository.Status_Expired_En ||
+                       (data_to_serialize as ObservableCollection<Note_Template>)[0].Status == StrDataRepository.Status_Expired_Ru))
                     {
-                        temp_data.Add(new Note_Data(note));
+                        file_path = directory + StrDataRepository.expired_note_short_filePath;
+                        foreach (var note in data_to_serialize as ObservableCollection<Note_Template>)
+                        {
+                            temp_data.Add(new Note_Data(note));
+                        }
+                        Xml_auxillary_serialize_Method(temp_data, file_path);
                     }
-                    Xml_auxillary_serialize_Method(temp_data, file_path);
-                }
-                if (data_to_serialize is ObservableCollection<Note_Template> &&
-                 (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title != StrDataRepository.Status_Expired_En &&
-                 (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title != StrDataRepository.Status_Expired_Ru &&
-                 (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title != StrDataRepository.Status_Completed_En &&
-                 (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title != StrDataRepository.Status_Completed_Ru)
-                {
-                    file_path = directory + StrDataRepository.note_short_fileName;
-                    foreach (var note in /*data_to_serialize*/ note_template as ObservableCollection<Note_Template>)
+                    if (data_to_serialize is ObservableCollection<Note_Template> &&
+                     (data_to_serialize as ObservableCollection<Note_Template>)[0].Status != StrDataRepository.Status_Expired_En &&
+                     (data_to_serialize as ObservableCollection<Note_Template>)[0].Status != StrDataRepository.Status_Expired_Ru &&
+                     (data_to_serialize as ObservableCollection<Note_Template>)[0].Status != StrDataRepository.Status_Completed_En &&
+                     (data_to_serialize as ObservableCollection<Note_Template>)[0].Status != StrDataRepository.Status_Completed_Ru)
                     {
-                        temp_data.Add(new Note_Data(note));
+                        file_path = directory + StrDataRepository.note_short_fileName;
+                        foreach (var note in /*data_to_serialize*/ note_template as ObservableCollection<Note_Template>)
+                        {
+                            temp_data.Add(new Note_Data(note));
+                        }
+                        Xml_auxillary_serialize_Method(temp_data, file_path);
                     }
-                    Xml_auxillary_serialize_Method(temp_data, file_path);
                 }
+                
             }
             catch (Exception)
             {
@@ -596,7 +600,7 @@ namespace Daily_Planner_V_4
                 index = Selected_Note_Index(note_template);
                 note_template.RemoveAt(index);
             }
-            File.Delete(StrDataRepository.note_full_filePath);
+            //File.Delete(StrDataRepository.note_full_filePath);
             XML_Serialization(note_template, StrDataRepository.directory);
             All_Counter_Fills();
             ListBx_Grp_Of_My_Tasks.Items.Refresh();

@@ -111,19 +111,25 @@ namespace Daily_Planner_V_4
             if (note_count > 0)
             {
                 Form1.XML_Serialization(note_collection, directory);
-            }  
+            }
             else
             {
                 if (note_collection[0].Status == StrDataRepository.Status_Completed_En || note_collection[0].Status == StrDataRepository.Status_Completed_Ru)
                 {
                     File.Delete(StrDataRepository.completed_note_full_filePath);
+                    Form1.XML_Serialization(note_collection, directory);
                 }
                 if (note_collection[0].Status == StrDataRepository.Status_Expired_En || note_collection[0].Status == StrDataRepository.Status_Expired_Ru)
                 {
                     File.Delete(StrDataRepository.expired_note_full_filePath);
+                    Form1.XML_Serialization(note_collection, directory);
                 }
-                else
+                if (note_collection[0].Status != StrDataRepository.Status_Expired_En && note_collection[0].Status != StrDataRepository.Status_Expired_Ru &&
+                    note_collection[0].Status != StrDataRepository.Status_Completed_En && note_collection[0].Status != StrDataRepository.Status_Completed_Ru)
+                {
                     File.Delete(StrDataRepository.note_full_filePath);
+                    Form1.XML_Serialization(note_collection, directory);
+                }
             }
         }
     }
