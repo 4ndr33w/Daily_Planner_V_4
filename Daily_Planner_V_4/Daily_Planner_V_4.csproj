@@ -286,6 +286,9 @@
     <Compile Include="Add_Note_Window.xaml.cs">
       <DependentUpon>Add_Note_Window.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Complete_Note_Request_Window.xaml.cs">
+      <DependentUpon>Complete_Note_Request_Window.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Delete_Grp_Request_Window.xaml.cs">
       <DependentUpon>Delete_Grp_Request_Window.xaml</DependentUpon>
     </Compile>
@@ -304,6 +307,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Add_Note_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Complete_Note_Request_Window.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

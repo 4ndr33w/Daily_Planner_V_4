@@ -46,10 +46,14 @@ namespace Daily_Planner_V_4
             InitializeComponent();
             Load_Default_Data();
         }
-        public void Hide_Btns_when_Selection_Changed()
+        public void Hide_Btns_when_Selection_Changed(ObservableCollection<Note_Template> data)
         {
-            foreach (var note in note_template)
+            foreach (var note in data)
             {
+                //if (note.Status_Title == StrDataRepository.Status_Expired_En || note.Status_Title == StrDataRepository.Status_Expired_Ru)
+                //{
+                //    note.Foreground = Colors.White.ToString();
+                //}
                 note.Btn_Hide_Compl_or_Exp_note_Visibility = StrDataRepository.Visibility_hidden;
                 note.Delete_Btn_Visibility = StrDataRepository.Visibility_hidden;
                 note.Edit_Btn_Visibility = StrDataRepository.Visibility_hidden;
@@ -91,6 +95,17 @@ namespace Daily_Planner_V_4
         {
             union_Grps = XML_Grps_Deserialization(StrDataRepository.directory);
             note_template = Fill_Note_Template_From_List_Data_and_sortByDate(   XML_Note_Deserialization(strings_.Note_Data_Save)  );
+            foreach (var note in note_template)
+            {
+                if (note.Date < DateTime.Now)
+                {
+                    note.Color = Colors.Transparent.ToString();
+                    note.Group.Color = Colors.Transparent.ToString();
+                    note.Foreground = Colors.White.ToString();
+                    note.Urgency = false;
+                    note.Status_Title = Properties.Languages.Lang.Expired_string;
+                }
+            }
             expired_note_template = Fill_Note_Template_From_List_Data_and_sortByDate( XML_Note_Deserialization(StrDataRepository.expired_note_full_filePath));
             completed_note_template = Fill_Note_Template_From_List_Data_and_sortByDate(XML_Note_Deserialization(StrDataRepository.completed_note_full_filePath));
             Fill_Grps_From_Union(union_Grps);
@@ -203,11 +218,16 @@ namespace Daily_Planner_V_4
                 {
                     Directory.CreateDirectory(directory);
                 }
-                if (data_to_serialize is ObservableCollection<Group_of_Notes>) { file_path = directory + strings_.Grps_Short_FileName; Xml_auxillary_serialize_Method(data_to_serialize, file_path); }
+                if (data_to_serialize is ObservableCollection<Group_of_Notes>) 
+                { 
+                    file_path = directory + StrDataRepository.grps_short_fileName; 
+                    Xml_auxillary_serialize_Method(data_to_serialize, file_path); 
+                }
                 //else if (data_to_serialize is ObservableCollection<Note_Data>) { file_path = directory + strings_.Note_Data_Save; }
-                if (data_to_serialize is ObservableCollection<Note_Template> && 
+                if (data_to_serialize is ObservableCollection<Note_Template> &&
                     ((data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title == StrDataRepository.Status_Completed_En ||
                     (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title == StrDataRepository.Status_Completed_Ru))
+
                 {
                     file_path = directory + StrDataRepository.completed_note_short_filePath;
                     foreach (var note in data_to_serialize as ObservableCollection<Note_Template>)
@@ -235,27 +255,35 @@ namespace Daily_Planner_V_4
                  (data_to_serialize as ObservableCollection<Note_Template>)[0].Status_Title != StrDataRepository.Status_Completed_Ru ) 
                 {
                     file_path = directory + StrDataRepository.note_short_fileName;
-                    foreach (var note in data_to_serialize as ObservableCollection<Note_Template>)
+                    foreach (var note in /*data_to_serialize*/ note_template as ObservableCollection<Note_Template>)
                     {
                         temp_data.Add(new Note_Data(note));
                     }
                     Xml_auxillary_serialize_Method(temp_data, file_path);
                 }
-
             }
             catch (Exception)
             {
                 return;
                 //System.Windows.MessageBox.Show(Properties.Languages.Lang.Saving_Error_Message);
+                MessageBox.Show("Проблемы в основном методе сохранения");
             }
         }
         private void Xml_auxillary_serialize_Method <T> (ObservableCollection<T> data, string file_path)
         {
-            if (File.Exists(file_path)) { File.Delete(file_path); }
-            XmlSerializer xml_serializer = new XmlSerializer(data.GetType());
-            Stream fstream = new FileStream(file_path, FileMode.Create, FileAccess.Write);
-            xml_serializer.Serialize(fstream, data);
-            fstream.Close();
+            try
+            {
+                if (File.Exists(file_path)) { File.Delete(file_path); }
+                XmlSerializer xml_serializer = new XmlSerializer(data.GetType());
+                Stream fstream = new FileStream(file_path, FileMode.Create, FileAccess.Write);
+                xml_serializer.Serialize(fstream, data);
+                fstream.Close();
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("Проблемы во вспомогательном методе сохранения");
+            }
         }
         public ObservableCollection<Group_of_Notes> XML_Grps_Deserialization(string directory)
         {
@@ -310,7 +338,6 @@ namespace Daily_Planner_V_4
         }
         public ObservableCollection<Note_Template> Fill_Note_Template_From_List_Data_and_sortByDate (List<Note_Data> data)
         {
-
             ObservableCollection<Note_Template> temp_data = new ObservableCollection<Note_Template>();
             if (data != null)
             {
@@ -318,16 +345,6 @@ namespace Daily_Planner_V_4
                 foreach (Note_Data item in data)
                 {
                     temp_data.Add(new Note_Template(item));
-                }
-                foreach (var note in temp_data)
-                {
-                    if (note.Date < DateTime.Now)
-                    {
-                        note.Color = Colors.Transparent.ToString();
-                        note.Foreground = Colors.White.ToString();
-                        note.Urgency = false;
-                        note.Status_Title = Properties.Languages.Lang.Expired_string;
-                    }
                 }
                 return temp_data;
             }
@@ -388,7 +405,7 @@ namespace Daily_Planner_V_4
                 }
             }
             ListBx_Grp_Of_Delegated_Tasks.SelectedIndex = -1;
-            Hide_Btns_when_Selection_Changed();
+            Hide_Btns_when_Selection_Changed(note_template);
         }
 
         private void ListBx_Grp_Of_Delegated_Tasks_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -404,7 +421,7 @@ namespace Daily_Planner_V_4
                 }
             }
             ListBx_Grp_Of_My_Tasks.SelectedIndex = -1;
-            Hide_Btns_when_Selection_Changed();
+            Hide_Btns_when_Selection_Changed(note_template);
         }
         public bool find_grp_filter(Note_Template arg)
         {
@@ -438,7 +455,7 @@ namespace Daily_Planner_V_4
                 ListBx_Stack_Of_Notes.ItemsSource = note_template.Where(a => a.Date.ToShortDateString() == DateTime.Today.ToShortDateString());
             }
 
-            Hide_Btns_when_Selection_Changed();
+            Hide_Btns_when_Selection_Changed(note_template);
             ListBx_Grp_Of_Delegated_Tasks.SelectedIndex = -1;
             ListBx_Grp_Of_My_Tasks.SelectedIndex = -1;
             ListBx_Grp_Of_My_Tasks.Items.Refresh();
@@ -451,7 +468,7 @@ namespace Daily_Planner_V_4
             {
                 ListBx_Stack_Of_Notes.ItemsSource = note_template;
             }
-            
+            Hide_Btns_when_Selection_Changed(note_template);
             ListBx_Grp_Of_Delegated_Tasks.SelectedIndex = -1;
             ListBx_Grp_Of_My_Tasks.SelectedIndex = -1;
             ListBx_Grp_Of_My_Tasks.Items.Refresh();
@@ -506,15 +523,16 @@ namespace Daily_Planner_V_4
             }
             if (ListBx_Stack_Of_Notes.ItemsSource == expired_note_template && expired_note_template != null)
             {
-                Hide_Btns_when_Selection_Changed();
+                Hide_Btns_when_Selection_Changed(expired_note_template);
                 if (ListBx_Stack_Of_Notes.SelectedItem != null)
                 {
-                    expired_note_template[ListBx_Stack_Of_Notes.SelectedIndex].Delete_Btn_Visibility = StrDataRepository.Visibility_hidden;
+                    expired_note_template[ListBx_Stack_Of_Notes.SelectedIndex].Delete_Btn_Visibility = StrDataRepository.Visibility_visible;
                 }
             }
             if (ListBx_Stack_Of_Notes.ItemsSource == completed_note_template && completed_note_template != null)
             {
-                completed_note_template[ListBx_Stack_Of_Notes.SelectedIndex].Delete_Btn_Visibility = StrDataRepository.Visibility_hidden;
+                Hide_Btns_when_Selection_Changed(completed_note_template);
+                completed_note_template[ListBx_Stack_Of_Notes.SelectedIndex].Delete_Btn_Visibility = StrDataRepository.Visibility_visible;
             }
             ListBx_Stack_Of_Notes.Items.Refresh();
         }
@@ -586,11 +604,14 @@ namespace Daily_Planner_V_4
 
         private void Btn_complete_task_Click(object sender, RoutedEventArgs e)
         {
-
+            Complete_Note_Request_Window complete_note_wndw = new Complete_Note_Request_Window();
+            complete_note_wndw.Owner = this;
+            complete_note_wndw.Show();
         }
 
         private void Btn_Show_Expired_Notes_Click(object sender, RoutedEventArgs e)
         {
+            Hide_Btns_when_Selection_Changed(expired_note_template);
             if (expired_note_template != null)
             {
                 ListBx_Stack_Of_Notes.SelectedIndex = -1;
@@ -603,6 +624,7 @@ namespace Daily_Planner_V_4
 
         private void Btn_Show_Completed_Notes_Click(object sender, RoutedEventArgs e)
         {
+            Hide_Btns_when_Selection_Changed(completed_note_template);
             if (completed_note_template != null)
             {
                 ListBx_Stack_Of_Notes.SelectedIndex = -1;
