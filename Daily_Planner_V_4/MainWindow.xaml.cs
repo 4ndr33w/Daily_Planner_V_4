@@ -18,6 +18,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Xml.Serialization;
 using System.Resources;
+using System.ComponentModel;
+using System.Timers;
 
 namespace Daily_Planner_V_4
 {
@@ -26,6 +28,10 @@ namespace Daily_Planner_V_4
     /// </summary>
     public partial class MainWindow : Window
     {
+        private System.Windows.Forms.NotifyIcon _notifyIcon;
+        private WindowState _stored_WindowState = WindowState.Normal;
+        private static System.Timers.Timer event_timer;
+
         public StrDataRepository strings_ = new StrDataRepository();
         public Note_Template current_note_template = new Note_Template();
         Note_Counter_Fills counter_fills_class = new Note_Counter_Fills();
@@ -89,6 +95,14 @@ namespace Daily_Planner_V_4
         }
         public void Load_Default_Data()
         {
+            _notifyIcon = new System.Windows.Forms.NotifyIcon();
+            _notifyIcon.BalloonTipText = Properties.Languages.Lang.NotifyIcon_Minimized_Announce;
+            _notifyIcon.Text = Properties.Languages.Lang.The_App_Name;
+            _notifyIcon.BalloonTipTitle = Properties.Languages.Lang.The_App_Name;
+            _notifyIcon.Icon = new System.Drawing.Icon("Icon.ico");
+            _notifyIcon.Click += new EventHandler(NotifyIcon_Click);
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
             union_Grps = XML_Grps_Deserialization(StrDataRepository.directory);
             note_template = Fill_Note_Template_From_List_Data_and_sortByDate(   XML_Note_Deserialization(strings_.Note_Data_Save)  );
             foreach (var note in note_template)
@@ -640,6 +654,94 @@ namespace Daily_Planner_V_4
                 ListBx_Grp_Of_My_Tasks.SelectedIndex = -1;
                 ListBx_Grp_Of_Delegated_Tasks.SelectedIndex = -1;
             }
+        }
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (WindowState == WindowState.Minimized)
+                {
+                    Hide();
+                    if (_notifyIcon != null)
+                    {
+                        _notifyIcon.ShowBalloonTip(4000);
+                    }
+                }
+                else _stored_WindowState = WindowState;
+            }
+            catch (Exception)
+            {
+
+                return;
+            }
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            try
+            {
+                _notifyIcon.Dispose();
+                _notifyIcon = null;
+            }
+            catch (Exception)
+            {
+
+                return;
+            }
+        }
+
+        private void ShowTrayIcon(bool show)
+        {
+            if (_notifyIcon != null)
+            {
+                _notifyIcon.Visible = show;
+            }
+        }
+        private void CheckTrayIcon()
+        {
+            ShowTrayIcon(!IsVisible);
+        }
+        private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            CheckTrayIcon();
+        }
+        private void NotifyIcon_Click(object sender, EventArgs e)
+        {
+            this.Show();
+            WindowState = _stored_WindowState;
+        }
+
+        //private async void OnTimeEvent(Object source, ElapsedEventArgs e)
+        //{
+        //    try
+        //    {
+        //        await Task.Run(() =>
+        //        {
+
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+        //}
+        public void TimeEvent()
+        {
+            event_timer = new System.Timers.Timer();
+            event_timer.Interval = 3000;
+            event_timer.AutoReset = true;
+            event_timer.Enabled = true;
+            //event_timer.Elapsed += OnTimeEvent;
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            //if (notify != null)
+            //{
+            //    notify.Close();
+            //}
         }
     }
 }
