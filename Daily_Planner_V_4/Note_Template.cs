@@ -122,5 +122,13 @@ namespace Daily_Planner_V_4
             _mark_to_complete_note_visibility = StrDataRepository.Visibility_hidden;
             _expired = "";
         }
+
+        public override string ToString()
+        {
+            return $"Date = {_date.ToString("d MMMM", CultureInfo.CreateSpecificCulture(Properties.Settings.Default.languageCode))} \n" + 
+                $"Time = {_date.ToString("HH' ':' ' mm")} \n" + 
+                $"Header = {_header} \n" +
+                $"Color = {_color} ";
+        }
     }
 }

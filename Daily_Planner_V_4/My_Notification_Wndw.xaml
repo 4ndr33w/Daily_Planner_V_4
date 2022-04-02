@@ -1,0 +1,68 @@
+﻿<Window x:Class="Daily_Planner_V_4.My_Notification_Wndw"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Daily_Planner_V_4"
+        xmlns:language ="clr-namespace:Daily_Planner_V_4.Properties.Languages"
+        mc:Ignorable="d"
+        WindowStartupLocation="Manual" 
+        BorderBrush="Transparent"
+        WindowStyle="None"
+        WindowState="Minimized"
+        BorderThickness="0"
+        Visibility="Visible"
+        Title="Notification_Window" 
+        MinHeight="100" 
+        MinWidth="300" 
+        MaxHeight="100" 
+        MaxWidth="300" 
+        x:Name="Notify_Wndw" 
+        Background="{Binding ElementName=note_notice, Path=Color}" 
+        Loaded="Notify_Wndw_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="42*"/>
+            <RowDefinition Height="51*"/>
+            <RowDefinition Height="7*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="87*"/>
+            <ColumnDefinition Width="13*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock x:Name="Header_TxtBx" Grid.Column="0" Grid.Row="0" Text="" HorizontalAlignment="Stretch" Foreground="Black" Margin="20,10,0,0"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
+            <StackPanel Grid.Column="0" Grid.Row="1" Margin="0,0,0,-2" Grid.RowSpan="2">
+                <TextBlock x:Name="Time_TxtBx" Text="{Binding  ElementName=note_notice, Path=Time}" HorizontalAlignment="Left" Foreground="Black" Margin="20,0,0,0"/>
+                <TextBlock x:Name="Date_TxtBx" Text="{Binding  ElementName=note_notice, Path=Day_and_Month}" HorizontalAlignment="Left" Foreground="Black" Margin="20,0,0,0"/>
+            </StackPanel>
+            <TextBlock x:Name="expired_TxtBlck" 
+                       Text="" 
+                       HorizontalAlignment="Center" 
+                       Background="Black" 
+                       FontSize="12" 
+                       Margin="20,10"/>
+        </StackPanel>
+
+        <Button x:Name="close_notification_window" 
+                Grid.Column="1" 
+                Grid.Row="0" 
+                Background="Transparent" 
+                Content="X" 
+                Foreground="Black" 
+                Margin="9,10,10,9" 
+                Click="close_notification_window_Click"/>
+        <Button x:Name="Complete_Btn" 
+                Grid.Column="1" 
+                Grid.Row="1" 
+                Visibility="Hidden" 
+                Height="25" 
+                Background="Transparent" 
+                Foreground="Black" 
+                Content="{x:Static language:Lang.Complete_Task_Btn_Short}" 
+                Padding="5,2,5,2" 
+                Margin="-57,0,0,0" 
+                Width="75" 
+                Click="Complete_Btn_Click"/>
+    </Grid>
+</Window>

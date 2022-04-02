@@ -5,6 +5,11 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daily_Planner_V_4", "Daily_Planner_V_4\Daily_Planner_V_4.csproj", "{BDB30BB9-5175-45B6-A29A-864F4FC524C9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpirationNoteTrackingLogic", "ExpirationNoteTrackingLogic\ExpirationNoteTrackingLogic.csproj", "{C8602691-813C-4C85-86FE-F5677D0AFEDE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BDB30BB9-5175-45B6-A29A-864F4FC524C9} = {BDB30BB9-5175-45B6-A29A-864F4FC524C9}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +20,10 @@ Global
 		{BDB30BB9-5175-45B6-A29A-864F4FC524C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDB30BB9-5175-45B6-A29A-864F4FC524C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDB30BB9-5175-45B6-A29A-864F4FC524C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8602691-813C-4C85-86FE-F5677D0AFEDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8602691-813C-4C85-86FE-F5677D0AFEDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8602691-813C-4C85-86FE-F5677D0AFEDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8602691-813C-4C85-86FE-F5677D0AFEDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

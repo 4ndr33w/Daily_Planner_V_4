@@ -25,7 +25,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>10</ApplicationRevision>
+    <ApplicationRevision>11</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -299,7 +299,11 @@
     <Compile Include="Lang_Change_Message_Window.xaml.cs">
       <DependentUpon>Lang_Change_Message_Window.xaml</DependentUpon>
     </Compile>
+    <Compile Include="My_Notification_Wndw.xaml.cs">
+      <DependentUpon>My_Notification_Wndw.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Note_Counter_Fills.cs" />
+    <Compile Include="Note_Expiration_Tracker.cs" />
     <Compile Include="StrDataRepository.cs" />
     <Compile Include="Time_Range_For_AddNoteWndw_TimePicker.cs" />
     <Page Include="Add_Grp_Window.xaml">
@@ -340,6 +344,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="My_Notification_Wndw.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Note_Data.cs" />
@@ -407,6 +415,9 @@
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

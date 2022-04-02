@@ -32,6 +32,8 @@ namespace Daily_Planner_V_4
         private WindowState _stored_WindowState = WindowState.Normal;
         private static System.Timers.Timer event_timer;
 
+        public My_Notification_Wndw Notify_Wndw;
+
         public StrDataRepository strings_ = new StrDataRepository();
         public Note_Template current_note_template = new Note_Template();
         Note_Counter_Fills counter_fills_class = new Note_Counter_Fills();
@@ -42,6 +44,8 @@ namespace Daily_Planner_V_4
         public ObservableCollection<Note_Template> note_template = new ObservableCollection<Note_Template>();
         public ObservableCollection<Note_Template> expired_note_template = new ObservableCollection<Note_Template>();
         public ObservableCollection<Note_Template> completed_note_template = new ObservableCollection<Note_Template>();
+        public ObservableCollection<Note_Template> today_notes = new ObservableCollection<Note_Template>();
+
         public bool create_new_note = false;
         string langCode = "en-GB";
         public MainWindow()
@@ -49,7 +53,11 @@ namespace Daily_Planner_V_4
             langCode = Properties.Settings.Default.languageCode;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(langCode);
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(langCode);
+
+
             InitializeComponent();
+
+            Notify_Wndw = My_Notification_Wndw.Instance;
             Load_Default_Data();
         }
         public void Hide_Btns_when_Selection_Changed(ObservableCollection<Note_Template> data)
@@ -105,9 +113,11 @@ namespace Daily_Planner_V_4
 
             union_Grps = XML_Grps_Deserialization(StrDataRepository.directory);
             note_template = Fill_Note_Template_From_List_Data_and_sortByDate(   XML_Note_Deserialization(strings_.Note_Data_Save)  );
+            TimeSpan is_note_expired;
             foreach (var note in note_template)
             {
-                if (note.Date < DateTime.Now)
+                is_note_expired = DateTime.Now - note.Date;
+                if (is_note_expired.TotalSeconds > 0)
                 {
                     note.Urgency = false;
                     note.Status = Properties.Languages.Lang.Expired_string;
@@ -712,13 +722,142 @@ namespace Daily_Planner_V_4
             WindowState = _stored_WindowState;
         }
 
+        public void Run_Notify_OnTime_Event()
+        {
+            try
+            {
+                Thread newThread = new Thread(() => { TimeEvent(); })/* { IsBackground = true}*/;//(new ThreadStart(TimeEvent));
+                newThread.SetApartmentState(ApartmentState.STA);
+
+                newThread.Start();
+                newThread.Interrupt();
+
+                //TimeEvent();
+            }
+            catch (Exception)
+            {
+                return;
+
+                // MessageBox.Show("Troubles");
+            }
+        }
+
         //private async void OnTimeEvent(Object source, ElapsedEventArgs e)
         //{
         //    try
         //    {
         //        await Task.Run(() =>
         //        {
+        //            Application.Current.Dispatcher.Invoke((Action)delegate
+        //            {
+        //                //My_Notification_Wndw notification_Wndw = new My_Notification_Wndw();
+        //                Notify_Wndw.WindowState = WindowState.Minimized;
+        //                if ((note_template != null || note_template.Count > -1) && (!Notify_Wndw.IsVisible || Notify_Wndw.WindowState != WindowState.Normal))
+        //                {
+        //                    //if (!notification_Wndw.IsVisible || notification_Wndw.WindowState != WindowState.Normal)
+        //                //    foreach (var today_note in today_notes.ToArray())
+        //                //    {
+        //                //        if ((Convert.ToDateTime(today_note.Date) - DateTime.Now).TotalSeconds > 300 && (Convert.ToDateTime(today_note.Date) - DateTime.Now).TotalSeconds < 304)
+        //                //        {
+        //                //            //_alert_sound.Load();
+        //                //            //_alert_sound.Play();
 
+        //                //            Notify_Wndw.WindowState = WindowState.Minimized;
+
+        //                //            Notify_Wndw.Header_TxtBx.Text = today_note.Header;
+        //                //            Notify_Wndw.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(today_note.Color));
+        //                //            Notify_Wndw.Time_TxtBx.Text = today_note.Time;
+        //                //            Notify_Wndw.Date_TxtBx.Text = today_note.Day_and_Month;
+        //                //            Notify_Wndw.temp_completed_note_data = completed_note_template;
+        //                //            Notify_Wndw.temp_note_data = today_notes;
+        //                //            Notify_Wndw.note_notice = today_note;
+
+        //                //            Notify_Wndw.Topmost = true;
+        //                //            Notify_Wndw.Topmost = false;
+        //                //            Notify_Wndw.WindowState = WindowState.Normal;
+        //                //            Notify_Wndw.Visibility = Visibility.Visible;
+        //                //            Notify_Wndw.Show();
+        //                //            Notify_Wndw.Focus();
+        //                //    }
+        //                //    if ((today_note.Date - DateTime.Now).TotalSeconds < 0 && (today_note.Date - DateTime.Now).TotalSeconds > -3)
+        //                //    {
+        //                //        int index = -1;
+
+
+        //                //            //_alert_sound.Load();
+        //                //            //_alert_sound.Play();
+
+        //                //            Notify_Wndw.WindowState = WindowState.Minimized;
+
+
+        //                //            today_note.Color = Colors.Transparent.ToString();
+        //                //            today_note.Foreground = Colors.White.ToString();
+        //                //            today_note.Urgency = false;
+        //                //            //today_note.Urgency_Expired_Complete_Title = String.Empty;
+        //                //            today_note.Status = Properties.Languages.Lang.Expired_string;
+        //                //            today_note.Status_Title = Properties.Languages.Lang.Expired_string;
+        //                //            today_note.Expired_Foreground = Colors.White.ToString();
+        //                //            today_note.Foreground = Colors.White.ToString();
+
+        //                //            Notify_Wndw.Header_TxtBx.Text = today_note.Header;
+        //                //            //notification_Wndw.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(today_note.Color));
+
+        //                //            Notify_Wndw.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(Colors.Transparent.ToString()));// Colors.Transparent.ToString();
+        //                //            Notify_Wndw.Time_TxtBx.Text = today_note.Time;
+        //                //            Notify_Wndw.Date_TxtBx.Text = today_note.Day_and_Month;
+        //                //            Notify_Wndw.temp_completed_note_data = completed_note_template;
+        //                //            Notify_Wndw.temp_note_data = today_notes;
+        //                //            Notify_Wndw.note_notice = today_note;
+        //                //            Notify_Wndw.Header_TxtBx.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(Colors.White.ToString()));
+        //                //            Notify_Wndw.Time_TxtBx.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(Colors.White.ToString()));
+        //                //            Notify_Wndw.Date_TxtBx.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(Colors.White.ToString()));
+        //                //            Notify_Wndw.expired_TxtBlck.Text = Properties.Languages.Lang.Expired_string;
+        //                //            Notify_Wndw.expired_TxtBlck.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(Colors.White.ToString()));
+        //                //            Notify_Wndw.close_notification_window.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(Colors.White.ToString()));
+        //                //            Notify_Wndw.Complete_Btn.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString(Colors.White.ToString()));// Colors.Transparent.ToString();
+        //                //            for (int i = 0; i < note_template.Count; i++)
+        //                //            {
+        //                //                if (note_template[i].Equals(today_note))
+        //                //                {
+        //                //                    note_template[i] = today_note;
+
+        //                //                    index = i;
+        //                //                    return;
+        //                //                }
+        //                //            }
+        //                //            ListBx_Stack_Of_Notes.Items.Refresh();
+
+        //                //            Notify_Wndw.Topmost = true;
+        //                //            Notify_Wndw.Topmost = false;
+        //                //            Notify_Wndw.WindowState = WindowState.Normal;
+        //                //            Notify_Wndw.Visibility = Visibility.Visible;
+        //                //            Notify_Wndw.Topmost = true;
+        //                //            Notify_Wndw.Topmost = false;
+        //                //            Notify_Wndw.Show();
+        //                //            Notify_Wndw.Focus();
+
+        //                //            today_notes.Remove(today_note);
+        //                //    }
+        //                //        else return;
+        //                //}
+        //                }
+        //                if (Notify_Wndw.IsVisible || Notify_Wndw.WindowState == WindowState.Normal)
+        //                {
+        //                    Notify_Wndw.Close();
+        //                }
+        //                Notify_Wndw.Topmost = true;
+        //                //notification_Wndw.Topmost = false;
+        //                Notify_Wndw.Focus();
+        //                ListBx_Stack_Of_Notes.Items.Refresh();
+        //            });
+        //            if (!Dispatcher.CheckAccess())
+        //            {
+        //                Dispatcher.Invoke(() => ListBx_Stack_Of_Notes.Items.Refresh());
+        //            }
+        //        });
+        //        if (!Dispatcher.CheckAccess())
+        //        {
+        //            Dispatcher.Invoke(() => ListBx_Stack_Of_Notes.Items.Refresh());
         //        }
         //    }
         //    catch (Exception)
@@ -727,6 +866,7 @@ namespace Daily_Planner_V_4
         //        throw;
         //    }
         //}
+
         public void TimeEvent()
         {
             event_timer = new System.Timers.Timer();
